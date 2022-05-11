@@ -15,6 +15,10 @@ return new class extends Migration
     {
         Schema::create('destination', function (Blueprint $table) {
             $table->id();
+            $table->destination();
+            $table->sender_id();
+            $table->message_id();
+            $table->time_received();
             $table->timestamps();
         });
     }
