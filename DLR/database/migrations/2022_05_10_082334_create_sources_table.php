@@ -14,9 +14,8 @@ return new class extends Migration
     public function up()
     {
         Schema::create('sources', function (Blueprint $table) {
-            $table->id();
+            $table->id('source_id');
             $table->string('sender_id')->nullable();
-            $table->integer('sender_unique_identifier')->nullable();
             $table->timestamps();
         });
     }
@@ -28,6 +27,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('source');
+        Schema::dropIfExists('sources');
     }
 };

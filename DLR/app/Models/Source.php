@@ -7,6 +7,6 @@ use Illuminate\Database\Eloquent\Model;
 
 class Source extends Model
 {
-    protected $fillable = ['sender_id','sender_unique_identifier'];
+    protected $fillable = ['sender_id'];
     use HasFactory;
 }

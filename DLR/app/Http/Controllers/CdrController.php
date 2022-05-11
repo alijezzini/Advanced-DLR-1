@@ -1,8 +1,9 @@
 <?php
 
 namespace App\Http\Controllers;
-
+use App\Models\Cdr;
 use Illuminate\Http\Request;
+
 
 class CdrController extends Controller
 {
@@ -13,9 +14,14 @@ class CdrController extends Controller
      */
     public function index()
     {
-        //
+        $cdr = Cdr::all();
+        $CDR = [
+            'status' => 200,
+            'message' => 'get all CDR successfully',
+            'data' => $cdr,
+        ];
+        return $CDR;
     }
-
     /**
      * Show the form for creating a new resource.
      *
