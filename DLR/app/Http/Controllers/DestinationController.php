@@ -24,6 +24,9 @@ class DestinationController extends Controller
     public function create()
     {
         //
+        $input = Request::all();
+        Destination::create($input);
+        return $input;
     }
 
     /**

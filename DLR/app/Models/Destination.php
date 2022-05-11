@@ -7,5 +7,6 @@ use Illuminate\Database\Eloquent\Model;
 
 class Destination extends Model
 {
+    protected $fillable = ['id', 'destination', 'sender_id', 'message_id', 'time_received'];
     use HasFactory;
 }
