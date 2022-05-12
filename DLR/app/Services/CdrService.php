@@ -9,29 +9,29 @@ use Illuminate\Support\Facades\DB;
 
 class CdrService
 {
-    public function faker(Request $request): bool
-    {
-        $current_time = Carbon::now();
-        $blacklist_sender = $this->checkBlacklistSender($request);
-        $sender_destination = $this->checkSenderDestination($request);
+    // public function faker(Request $request): bool
+    // {
+    //     $current_time = Carbon::now();
+    //     // $blacklist_sender = $this->checkBlacklistSender($request);
+    //     $sender_destination = $this->checkSenderDestination($request);
 
-        if (!$blacklist_sender) {
-            return [
-                'status' => 200,
-                'message' => 'Sender ID was not found!',
-            ];
-        }
-        if (!$sender_destination) {
-            return [
-                'status' => 200,
-                'message' => 'Sender ID / Destination combination was not found!',
-            ];
-        }
-    }
+    //     if (!$blacklist_sender) {
+    //         return [
+    //             'status' => 200,
+    //             'message' => 'Sender ID was not found!',
+    //         ];
+    //     }
+    //     if (!$sender_destination) {
+    //         return [
+    //             'status' => 200,
+    //             'message' => 'Sender ID / Destination combination was not found!',
+    //         ];
+    //     }
+    // }
 
     public function checkBlacklistSender(Cdr $request): bool
     {
-        $source_sender_id = DB::table('source')
+        $source_sender_id = DB::table('sources')
 
             ->where('sender_id', '=', $request->senderid)
 
