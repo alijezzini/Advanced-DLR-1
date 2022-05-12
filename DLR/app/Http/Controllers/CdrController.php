@@ -16,23 +16,30 @@ class CdrController extends Controller
     public function index(Request $req)
          {   
             
-            $StartDates =$req->startdate;
-            $EndDates =$req->enddate;
-      
-            // $out = new \Symfony\Component\Console\Output\ConsoleOutput();
-            // $out->writeln($StartDates);
-            // $out->writeln($EndDates);
 
-               //get CDR table that include sender id between start date and end date.
+            // $out = new \Symfony\Component\Console\Output\ConsoleOutput();
+            // $out->writeln($req->enddate);
+
+            //get CDR table that include sender id between start date and end date.
+
                $SenderID = DB::table('cdrs')
+
                ->where('sender_id', '=', $req->senderid)
-               ->whereBetween('date_recieved', [$StartDates, $EndDates])
+
+               ->whereBetween('date_recieved', [$req->startdate, $req->enddate])
+
                ->get();
+
                //get CDR table that does include destination.
+
                $NoDestination = DB::table('cdrs')->whereNull('destination')->get();
+
                //get CDR table that does not include destination.
+
                $Destination = DB::table('cdrs')
+
                ->where('destination', '=', $req->destination)
+
                ->get();
 
  
@@ -70,7 +77,13 @@ class CdrController extends Controller
      */
     public function create()
     {
-        //
+        $SenderID = DB::table('cdrs')
+        ->where('cdr_id', '=',)
+        ->get();
+        if ($SenderID->count() > 0){  
+
+         
+                }
     }
 
     /**
