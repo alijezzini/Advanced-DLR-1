@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 use App\Models\Cdr;
 use Illuminate\Http\Request;
-
+use Illuminate\Support\Facades\DB;
 
 class CdrController extends Controller
 {
@@ -12,16 +12,57 @@ class CdrController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
-    {
-        $cdr = Cdr::all();
-        $CDR = [
-            'status' => 200,
-            'message' => 'get all CDR successfully',
-            'data' => $cdr,
-        ];
-        return $CDR;
-    }
+    
+    public function index(Request $req)
+         {   
+            
+            $StartDates =$req->startdate;
+            $EndDates =$req->enddate;
+      
+            // $out = new \Symfony\Component\Console\Output\ConsoleOutput();
+            // $out->writeln($StartDates);
+            // $out->writeln($EndDates);
+
+               //get CDR table that include sender id between start date and end date.
+               $SenderID = DB::table('cdrs')
+               ->where('sender_id', '=', $req->senderid)
+               ->whereBetween('date_recieved', [$StartDates, $EndDates])
+               ->get();
+               //get CDR table that does include destination.
+               $NoDestination = DB::table('cdrs')->whereNull('destination')->get();
+               //get CDR table that does not include destination.
+               $Destination = DB::table('cdrs')
+               ->where('destination', '=', $req->destination)
+               ->get();
+
+ 
+                    $CDR_Destination  = [
+                        'status' => 200,
+                        'message' => 'get all destination',
+                        'data' => $Destination,
+                    ];
+                    $CDR_NoDestination = [
+                        'status' => 200,
+                        'message' => 'get no destination',
+                        'data' => $NoDestination,
+                    ];
+                    $Message = [
+                        'status' => 200,
+                        'message' => 'no data',
+                    ];
+
+
+        if ($SenderID->count() > 0){  
+
+            if (is_null($req->destination)) {
+                return $NoDestination;
+            }else{
+                return $Destination;
+            }
+
+          }else {   return $Message;      
+                }
+}
     /**
      * Show the form for creating a new resource.
      *
