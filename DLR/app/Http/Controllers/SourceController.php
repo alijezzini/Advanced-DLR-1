@@ -113,8 +113,7 @@ class SourceController extends Controller
      */
     public function destroy($sender_id)
  {         
-     $out = new \Symfony\Component\Console\Output\ConsoleOutput();
-     $out->writeln($sender_id);
+
             $data = Source::where('sender_id', $sender_id);
             if (isset($data)) {
                 $data->delete();
