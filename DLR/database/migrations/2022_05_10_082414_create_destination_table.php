@@ -17,7 +17,7 @@ return new class extends Migration
             $table->id();
             $table->string('destination');
             $table->string('sender_id');
-            $table->message_id();
+            $table->integer('message_id');
             $table->timestamp('time_received');
             $table->timestamps();
         });
