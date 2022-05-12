@@ -36,7 +36,7 @@ Route::group([
 |                            CDR
 |--------------------------------------------------------------------------
 */ 
-Route::get('/cdr', [CdrController::class, 'index']);
+Route::post('/cdr', [CdrController::class, 'index']);
 
 });
 

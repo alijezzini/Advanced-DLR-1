@@ -46,7 +46,7 @@ class SourceController extends Controller
   
               return $respond;
           } else {
-  
+     
               $source = new Source;
               $source->sender_id = $request->sender_id;
               $source->save();
@@ -112,7 +112,9 @@ class SourceController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function destroy($sender_id)
- {
+ {         
+     $out = new \Symfony\Component\Console\Output\ConsoleOutput();
+     $out->writeln($sender_id);
             $data = Source::where('sender_id', $sender_id);
             if (isset($data)) {
                 $data->delete();
