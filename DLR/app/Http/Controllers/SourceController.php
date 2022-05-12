@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Http\Controllers;
+
 use App\Models\Source;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
@@ -29,36 +30,35 @@ class SourceController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-      //create
-      function create(Request $request)
-      {
-          $validator = Validator::make($request->all(), [
-              'sender_id' => 'required',
-           
-          ]);
-  
-          if ($validator->fails()) {
-              $respond = [
-                  'status' => 401,
-                  'message' => $validator->errors()->first(),
-                  'data' => null,
-              ];
-  
-              return $respond;
-          } else {
-     
-              $source = new Source;
-              $source->sender_id = $request->sender_id;
-              $source->save();
-              $respond = [
-                  'status' => 200,
-                  'message' => 'Sender ID added successfully',
-                  'data' => $source,
-              ];
-  
-              return $respond;
-          }
-      }
+    //create
+    function create(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'sender_id' => 'required',
+
+        ]);
+
+        if ($validator->fails()) {
+            $respond = [
+                'status' => 401,
+                'message' => $validator->errors()->first(),
+                'data' => null,
+            ];
+
+            return $respond;
+        } else {
+            $source = new Source;
+            $source->sender_id = $request->sender_id;
+            $source->save();
+            $respond = [
+                'status' => 200,
+                'message' => 'Sender ID added successfully',
+                'data' => $source,
+            ];
+
+            return $respond;
+        }
+    }
 
     /**
      * Store a newly created resource in storage.
@@ -112,25 +112,24 @@ class SourceController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function destroy($sender_id)
- {         
+    {
 
-            $data = Source::where('sender_id', $sender_id);
-            if (isset($data)) {
-                $data->delete();
-                $respond = [
-                    'status' => 200,
-                    'message' => 'sender_id deleted successfully',
-                    'data' => $data,
-                ];
-                return $respond;
-            } else {
-                $error = [
-                    'satus' => 400,
-                    'message' => 'sender_id not found',
-                    'data' => $data,
-                ];
-                return $error;
-            }
+        $data = Source::where('sender_id', $sender_id);
+        if (isset($data)) {
+            $data->delete();
+            $respond = [
+                'status' => 200,
+                'message' => 'sender_id deleted successfully',
+                'data' => $data,
+            ];
+            return $respond;
+        } else {
+            $error = [
+                'satus' => 400,
+                'message' => 'sender_id not found',
+                'data' => $data,
+            ];
+            return $error;
         }
- 
+    }
 }

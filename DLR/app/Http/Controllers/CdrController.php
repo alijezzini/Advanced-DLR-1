@@ -1,9 +1,11 @@
 <?php
 
 namespace App\Http\Controllers;
+
 use App\Models\Cdr;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Validator;
 
 class CdrController extends Controller
 {
@@ -12,78 +14,113 @@ class CdrController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    
+
     public function index(Request $req)
-         {   
-            
-
-            // $out = new \Symfony\Component\Console\Output\ConsoleOutput();
-            // $out->writeln($req->enddate);
-
-            //get CDR table that include sender id between start date and end date.
-
-               $SenderID = DB::table('cdrs')
-
-               ->where('sender_id', '=', $req->senderid)
-
-               ->whereBetween('date_recieved', [$req->startdate, $req->enddate])
-
-               ->get();
-
-               //get CDR table that does include destination.
-
-               $NoDestination = DB::table('cdrs')->whereNull('destination')->get();
-
-               //get CDR table that does not include destination.
-
-               $Destination = DB::table('cdrs')
-
-               ->where('destination', '=', $req->destination)
-
-               ->get();
-
- 
-                    $CDR_Destination  = [
-                        'status' => 200,
-                        'message' => 'get all destination',
-                        'data' => $Destination,
-                    ];
-                    $CDR_NoDestination = [
-                        'status' => 200,
-                        'message' => 'get no destination',
-                        'data' => $NoDestination,
-                    ];
-                    $Message = [
-                        'status' => 200,
-                        'message' => 'no data',
-                    ];
+    {
 
 
-        if ($SenderID->count() > 0){  
+        // $out = new \Symfony\Component\Console\Output\ConsoleOutput();
+        // $out->writeln($req->enddate);
+
+        //get CDR table that include sender id between start date and end date.
+
+        $SenderID = DB::table('cdrs')
+
+            ->where('sender_id', '=', $req->senderid)
+
+            ->whereBetween('date_recieved', [$req->startdate, $req->enddate])
+
+            ->get();
+
+        //get CDR table that does include destination.
+
+        $NoDestination = DB::table('cdrs')->whereNull('destination')->get();
+
+        //get CDR table that does not include destination.
+
+        $Destination = DB::table('cdrs')
+
+            ->where('destination', '=', $req->destination)
+
+            ->get();
+
+
+        $CDR_Destination  = [
+            'status' => 200,
+            'message' => 'get all destination',
+            'data' => $Destination,
+        ];
+        $CDR_NoDestination = [
+            'status' => 200,
+            'message' => 'get no destination',
+            'data' => $NoDestination,
+        ];
+        $Message = [
+            'status' => 200,
+            'message' => 'no data',
+        ];
+
+
+        if ($SenderID->count() > 0) {
 
             if (is_null($req->destination)) {
                 return $NoDestination;
-            }else{
+            } else {
                 return $Destination;
             }
-
-          }else {   return $Message;      
-                }
-}
+        } else {
+            return $Message;
+        }
+    }
     /**
      * Show the form for creating a new resource.
      *
      * @return \Illuminate\Http\Response
      */
-    public function create()
+    public function create(Request $request)
     {
-        $SenderID = DB::table('cdrs')
-        ->where('cdr_id', '=',)
-        ->get();
-        if ($SenderID->count() > 0){  
+        $validator = Validator::make($request->all(), [
+            'sender_id' => 'required',
+            'message_text' => 'required',
+            'status' => 'required',
+            'destination' => 'required',
+            'delivery_status' => 'required',
+            'terminator_message_id' => 'required',
+            'date_recieved' => 'required',
+            'date_sent' => 'required',
+            'date_dlr' => 'required',
+            'fake' => 'required'
+        ]);
 
-         
-                }
+        if ($validator->fails()) {
+            $respond = [
+                'status' => 401,
+                'message' => $validator->errors(),
+                'data' => null,
+            ];
+
+            return $respond;
+        } else {
+            $cdr_message = new Cdr;
+            $cdr_message->sender_id = $request->sender_id;
+            $cdr_message->message_text = $request->message_text;
+            $cdr_message->status = $request->status;
+            $cdr_message->destination = $request->destination;
+            $cdr_message->delivery_status = $request->delivery_status;
+            $cdr_message->terminator_message_id = $request->terminator_message_id;
+            $cdr_message->date_recieved = $request->date_recieved;
+            $cdr_message->date_sent = $request->date_sent;
+            $cdr_message->date_dlr = $request->date_dlr;
+            $cdr_message->fake = $request->fake;
+            $cdr_message->save();
+            $respond = [
+                'status' => 200,
+                'message' => 'CDR message object added successfully',
+                'data' => $cdr_message,
+            ];
+
+            return $respond;
+        }
     }
 
     /**
