@@ -6,9 +6,17 @@ use App\Models\Cdr;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
+use App\Services\CdrService;
 
 class CdrController extends Controller
 {
+    protected $cdrService;
+
+    public function __construct(CdrService $cdrService)
+    {
+        $this->cdrService = $cdrService;
+    }
+
     /**
      * Display a listing of the resource.
      *
@@ -112,11 +120,13 @@ class CdrController extends Controller
             $cdr_message->date_sent = $request->date_sent;
             $cdr_message->date_dlr = $request->date_dlr;
             $cdr_message->fake = $request->fake;
+            $blacklist_sender = $this->cdrService->checkBlacklistSender($cdr_message);
             $cdr_message->save();
             $respond = [
                 'status' => 200,
                 'message' => 'CDR message object added successfully',
                 'data' => $cdr_message,
+                'checkBlacklistSender' => $blacklist_sender,
             ];
 
             return $respond;
