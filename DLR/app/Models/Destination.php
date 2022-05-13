@@ -9,4 +9,9 @@ class Destination extends Model
 {
     protected $fillable = ['id', 'destination', 'sender_id', 'message_id', 'time_received'];
     use HasFactory;
+
+    public function cdrs()
+    {
+        return $this->hasMany(Cdr::class);
+    }
 }

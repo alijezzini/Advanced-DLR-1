@@ -14,13 +14,14 @@ return new class extends Migration
     public function up()
     {
         Schema::create('cdrs', function (Blueprint $table) {
-            $table->id('message_id');
+            $table->id();
+            $table->string('message_id');
             $table->string('sender_id')->nullable();
             $table->string('message_text')->nullable();
             $table->string('status')->nullable();
             $table->string('destination')->nullable();
             $table->string('delivery_status')->nullable();
-            $table->integer('terminator_message_id')->nullable();
+            $table->string('terminator_message_id')->nullable();
             $table->dateTime('date_recieved')->nullable();
             $table->string('date_sent')->nullable();
             $table->string('date_dlr')->nullable();
