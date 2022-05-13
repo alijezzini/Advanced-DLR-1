@@ -5,6 +5,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\SourceController;
 use App\Http\Controllers\CdrController;
+use App\Http\Controllers\DestinationController;
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -40,4 +41,11 @@ Route::group([
 */
     Route::post('/cdr', [CdrController::class, 'index']);
     Route::post('/createCdr', [CdrController::class, 'create']);
+    /*
+|--------------------------------------------------------------------------
+|                            CDR
+|--------------------------------------------------------------------------
+*/
+Route::post('/createDestination', [DestinationController::class, 'store']);
+
 });

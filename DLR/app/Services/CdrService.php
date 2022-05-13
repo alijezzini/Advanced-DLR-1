@@ -40,7 +40,19 @@ class CdrService
         if ($source_sender_id->isEmpty()) {
             return false;
         } else {
-            return true;
+            $sender_id_destination = DB::table('destination')
+
+            ->where('sender_id', '=', $request->sender_id)
+
+            ->where('destination', '=', $request->destination)
+
+            ->get();
+
+        if ($sender_id_destination->isEmpty()) {
+            return false;
+        } else {
+            return  true;
+        }
         }
     }
 
@@ -63,5 +75,6 @@ class CdrService
 
     public function checkTimeDifference(Request $request)
     {
+        
     }
 }
