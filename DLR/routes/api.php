@@ -4,7 +4,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\SourceController;
-use App\Http\Controllers\CdrController;
+use App\Http\Controllers\MessageController;
 use App\Http\Controllers\DestinationController;
 /*
 |--------------------------------------------------------------------------
@@ -39,13 +39,12 @@ Route::group([
 |                            CDR
 |--------------------------------------------------------------------------
 */
-    Route::post('/cdr', [CdrController::class, 'index']);
-    Route::post('/createCdr', [CdrController::class, 'create']);
+    Route::post('/cdr', [MessageController::class, 'index']);
+    Route::post('/createCdr', [MessageController::class, 'create']);
     /*
 |--------------------------------------------------------------------------
 |                            CDR
 |--------------------------------------------------------------------------
 */
-Route::post('/createDestination', [DestinationController::class, 'store']);
-
+    Route::post('/createDestination', [DestinationController::class, 'store']);
 });

@@ -2,7 +2,7 @@
 
 namespace App\Services;
 
-use App\Models\Cdr;
+use App\Models\Message;
 use App\Models\Destination;
 use Carbon\Carbon;
 use DateTime;
@@ -12,10 +12,10 @@ use Illuminate\Support\Str;
 
 class SmsService
 {
-    public function faker(Cdr $cdr): bool
+    public function faker(Message $message): bool
     {
-        $blacklist_sender = $this->checkBlacklistSender($cdr->sender_id);
-        $sender_destination = $this->checkSenderDestination($cdr->sender_id, $cdr->destination);
+        $blacklist_sender = $this->checkBlacklistSender($message->sender_id);
+        $sender_destination = $this->checkSenderDestination($message->sender_id, $message->destination);
 
         if (!$blacklist_sender) {
             return [
@@ -89,7 +89,7 @@ class SmsService
         return $time_interval->time_interval;
     }
 
-    public function generateTerminatorId(Cdr $cdr): string
+    public function generateTerminatorId(Message $message): string
     {
         return Str::uuid();
     }

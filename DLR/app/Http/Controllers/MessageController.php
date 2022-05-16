@@ -2,19 +2,19 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Cdr;
+use App\Models\Message;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
-use App\Services\CdrService;
+use App\Services\MessagesService;
 
-class CdrController extends Controller
+class MessageController extends Controller
 {
-    protected $cdrService;
+    protected $messagesService;
 
-    public function __construct(CdrService $cdrService)
+    public function __construct(MessagesService $messagesService)
     {
-        $this->cdrService = $cdrService;
+        $this->messagesService = $messagesService;
     }
 
     /**
@@ -32,7 +32,7 @@ class CdrController extends Controller
 
         //get CDR table that include sender id between start date and end date.
 
-        $SenderID = DB::table('cdrs')
+        $SenderID = DB::table('messages')
 
             ->where('sender_id', '=', $req->senderid)
 
@@ -42,11 +42,11 @@ class CdrController extends Controller
 
         //get CDR table that does include destination.
 
-        $NoDestination = DB::table('cdrs')->whereNull('destination')->get();
+        $NoDestination = DB::table('messages')->whereNull('destination')->get();
 
         //get CDR table that does not include destination.
 
-        $Destination = DB::table('cdrs')
+        $Destination = DB::table('messages')
 
             ->where('destination', '=', $req->destination)
 
@@ -93,11 +93,9 @@ class CdrController extends Controller
             'status' => 'required',
             'destination' => 'required',
             'delivery_status' => 'required',
-            'terminator_message_id' => 'required',
-            'date_recieved' => 'required',
+            'date_received' => 'required',
             'date_sent' => 'required',
-            'date_dlr' => 'required',
-            'fake' => 'required'
+            'fake',
         ]);
 
         if ($validator->fails()) {
@@ -109,24 +107,26 @@ class CdrController extends Controller
 
             return $respond;
         } else {
-            $cdr_message = new Cdr;
-            $cdr_message->sender_id = $request->sender_id;
-            $cdr_message->message_text = $request->message_text;
-            $cdr_message->status = $request->status;
-            $cdr_message->destination = $request->destination;
-            $cdr_message->delivery_status = $request->delivery_status;
-            $cdr_message->terminator_message_id = $request->terminator_message_id;
-            $cdr_message->date_recieved = $request->date_recieved;
-            $cdr_message->date_sent = $request->date_sent;
-            $cdr_message->date_dlr = $request->date_dlr;
-            $cdr_message->fake = $request->fake;
-            $blacklist_sender = $this->cdrService->checkBlacklistSender($cdr_message);
-            $cdr_message->save();
+            $message = new Message;
+            $message->sender_id = $request->sender_id;
+            $message->message_text = $request->message_text;
+            $message->status = $request->status;
+            $message->destination = $request->destination;
+            $message->delivery_status = $request->delivery_status;
+            $message->terminator_message_id = $request->terminator_message_id;
+            $message->date_received = $request->date_received;
+            $message->date_sent = $request->date_sent;
+            $message->date_dlr = $request->date_dlr;
+            $message->fake = $request->fake ?? '0';
+
+            $faker = $this->messagesService->faker($message);
+
+            $message->save();
             $respond = [
                 'status' => 200,
-                'message' => 'CDR message object added successfully',
-                'data' => $cdr_message,
-                'checkBlacklistSender' => $blacklist_sender,
+                'message' => 'Message object added successfully',
+                'data' => $message,
+                'faker' => $faker,
             ];
 
             return $respond;
