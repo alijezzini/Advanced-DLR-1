@@ -3,17 +3,15 @@
 namespace App\Services;
 
 use App\Models\Message;
-use App\Models\Destination;
 use Carbon\Carbon;
 use DateTime;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
 use App\Repository\MessageRepository;
 
 class FakerService
 {
-    public function faker(Message $message): bool
+
+    public function fakingManager(Message $message)
     {
         $blacklist_sender = $this->checkBlacklistSender($message->sender_id);
         $sender_destination = $this->checkSenderDestination($message->sender_id, $message->destination);
@@ -31,7 +29,7 @@ class FakerService
             ];
         }
 
-        return true;
+        FakerService::checkFakingInterval($message);
     }
 
     public function checkBlacklistSender(string $sender_id): bool
@@ -56,7 +54,7 @@ class FakerService
         }
     }
 
-    public function checkTimeDifference(DateTime $time_received): Carbon
+    public function getTimeDifference(DateTime $time_received): Carbon
     {
         $current_time = Carbon::now();
 
@@ -67,10 +65,32 @@ class FakerService
         return $time_difference;
     }
 
+    public function checkFakingInterval(Message $message)
+    {
+        $time_difference = $this->getTimeDifference($message->time_received);
+        $time_interval = MessageRepository::getTimeInterval();
 
+        if ($time_difference < $time_interval) {
+            $message->fake = 1;
+        } else {
+            MessagesService::sendMessage($message);
+        }
+    }
 
-    public function generateTerminatorId(Message $message): string
+    public function generateTerminatorId(): string
     {
         return Str::uuid();
+    }
+
+    public function sendTerminatorId(Message $message)
+    {
+
+        $terminator_id = $this->generateTerminatorId();
+        $this->message->terminator_message_id = $terminator_id;
+
+        return [
+            'status' => 200,
+            'terminator_message_id' => $terminator_id,
+        ];
     }
 }

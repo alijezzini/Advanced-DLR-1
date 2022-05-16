@@ -34,16 +34,18 @@ Route::group([
     Route::get('/source', [SourceController::class, 'listall']);
     Route::post('/createSource', [SourceController::class, 'create']);
     Route::delete('/source/{sender_id}', [SourceController::class, 'destroy']);
+
     /*
 |--------------------------------------------------------------------------
-|                            CDR
+|                            Messages
 |--------------------------------------------------------------------------
 */
     Route::post('/cdr', [MessageController::class, 'index']);
     Route::post('/createCdr', [MessageController::class, 'create']);
+
     /*
 |--------------------------------------------------------------------------
-|                            CDR
+|                            Destinations
 |--------------------------------------------------------------------------
 */
     Route::post('/createDestination', [DestinationController::class, 'store']);

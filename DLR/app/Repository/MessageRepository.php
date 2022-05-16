@@ -2,14 +2,9 @@
 
 namespace App\Repository;
 
-use App\Models\Message;
-use App\Models\Destination;
-use Carbon\Carbon;
+
 use DateTime;
-use Illuminate\Database\Eloquent\Model;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Str;
 
 class MessageRepository
 {
@@ -41,7 +36,7 @@ class MessageRepository
     {
     }
 
-    public function getTimeInterval(): DateTime
+    public static function getTimeInterval(): DateTime
     {
         $time_interval = DB::table('time_interval');
 

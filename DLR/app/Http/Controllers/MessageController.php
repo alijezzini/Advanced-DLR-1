@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
 use App\Services\MessagesService;
+use App\Services\FakerService;
 
 class MessageController extends Controller
 {
@@ -118,15 +119,11 @@ class MessageController extends Controller
             $message->date_sent = $request->date_sent;
             $message->date_dlr = $request->date_dlr;
             $message->fake = $request->fake ?? '0';
-
-            $faker = $this->messagesService->faker($message);
-
             $message->save();
             $respond = [
                 'status' => 200,
                 'message' => 'Message object added successfully',
                 'data' => $message,
-                'faker' => $faker,
             ];
 
             return $respond;
