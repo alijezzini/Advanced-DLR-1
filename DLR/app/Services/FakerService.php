@@ -9,8 +9,9 @@ use DateTime;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
+use App\Repository\MessageRepository;
 
-class SmsService
+class FakerService
 {
     public function faker(Message $message): bool
     {
@@ -35,11 +36,7 @@ class SmsService
 
     public function checkBlacklistSender(string $sender_id): bool
     {
-        $source_sender_id = DB::table('sources')
-
-            ->where('sender_id', '=', $sender_id)
-
-            ->get();
+        $source_sender_id = MessageRepository::getSourceBySenderId($sender_id);
 
         if ($source_sender_id->isEmpty()) {
             return false;
@@ -50,13 +47,7 @@ class SmsService
 
     public function checkSenderDestination(string $sender_id, string $destination): bool
     {
-        $sender_id_destination = DB::table('destination')
-
-            ->where('sender_id', '=', $sender_id)
-
-            ->where('destination', '=', $destination)
-
-            ->get();
+        $sender_id_destination = MessageRepository::getSenderDestination($sender_id, $destination);
 
         if ($sender_id_destination->isEmpty()) {
             return false;
@@ -69,25 +60,14 @@ class SmsService
     {
         $current_time = Carbon::now();
 
-        $time_received_query = DB::table('destination')
-
-            ->where('time_received', '=', $time_received)
-
-            ->get();
-
-        $time_received_carbon = Carbon::createFromDate($time_received_query->time_received);
+        $time_received_carbon = Carbon::createFromDate($time_received);
 
         $time_difference = $$time_received_carbon->diffInDays($current_time);
 
         return $time_difference;
     }
 
-    public function getTimeInterval(): DateTime
-    {
-        $time_interval = DB::table('time_interval');
 
-        return $time_interval->time_interval;
-    }
 
     public function generateTerminatorId(Message $message): string
     {

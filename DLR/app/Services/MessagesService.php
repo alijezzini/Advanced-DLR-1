@@ -12,6 +12,18 @@ use Illuminate\Support\Str;
 
 class MessagesService
 {
+    public function sendMessage(Message $message)
+    {
+    }
+
+    public function receiveMessageId(string $received_message_id, string $sent_terminator_id)
+    {
+    }
+
+    public function saveDlrStatus(string $message_id, string $delivery_status)
+    {
+    }
+
     public function faker(Message $message): bool
     {
         $blacklist_sender = $this->checkBlacklistSender($message->sender_id);
