@@ -13,7 +13,7 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('cdrs', function (Blueprint $table) {
+        Schema::create('received_messages', function (Blueprint $table) {
             $table->id();
             $table->string('message_id');
             $table->string('sender_id')->nullable();
@@ -37,6 +37,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('cdrs');
+        Schema::dropIfExists('received_messages');
     }
 };
