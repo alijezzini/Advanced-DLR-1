@@ -7,8 +7,12 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Http;
+
+
+
 class DlrController extends Controller
-{
+{   
+    
     /**
      * Display a listing of the resource.
      *
@@ -24,9 +28,12 @@ class DlrController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
-    {
-      return  $test = DB::table('messages')->get();
+    public function getMessage_id(Request $request)
+    {  
+        $tests = DB::table('messages')->where('terminator_message_id', '=', $request->message_id)
+        ->select('message_id','status')->get();
+        return  $tests;
+
     }
 
     /**
@@ -37,6 +44,7 @@ class DlrController extends Controller
      */
     public function store(Request $request)
  {
+    
     $RequestStatus=$request->status;
       switch ($RequestStatus) {
             case '2':
@@ -68,29 +76,13 @@ class DlrController extends Controller
         ->where('terminator_message_id', '=', $request->message_id)
         ->update(['messages.status' => $InsertStatus]);
 
-
-        // $response = Http::get('http://127.0.0.1:8000/api/auth/Vendor/DLRListenerBasic');
-        
-
-        // $client = new \GuzzleHttp\Client();
-        // $request = $client->get('http://127.0.0.1:8000/api/auth/Vendor/DLRListenerBasic');
-        // $response = $request->getBody()->getContents();
-        // echo '<pre>';
-        // print_r($response);
-        // exit;
-    
-    
-    
-        // dd($response);
-
-
         $try = [
             'status' => 200,
-            'message' => 'Id matched successfully',
-            'data' => $test,
+            'success' => 'Id matched successfully',
         ];
         
-          return $try;
+          return $this->getMessage_id($request);
+      
     }
 
     /**
