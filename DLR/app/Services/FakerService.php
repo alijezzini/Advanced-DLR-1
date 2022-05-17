@@ -11,26 +11,7 @@ use App\Repository\MessageRepository;
 class FakerService
 {
 
-    public function fakingManager(Message $message)
-    {
-        $blacklist_sender = $this->checkBlacklistSender($message->sender_id);
-        $sender_destination = $this->checkSenderDestination($message->sender_id, $message->destination);
 
-        if (!$blacklist_sender) {
-            return [
-                'status' => 200,
-                'message' => 'Sender ID was not found!',
-            ];
-        }
-        if (!$sender_destination) {
-            return [
-                'status' => 200,
-                'message' => 'Sender ID / Destination combination was not found!',
-            ];
-        }
-
-        FakerService::checkFakingInterval($message);
-    }
 
     public function checkBlacklistSender(string $sender_id): bool
     {
@@ -92,5 +73,26 @@ class FakerService
             'status' => 200,
             'terminator_message_id' => $terminator_id,
         ];
+    }
+
+    public function fakingManager(Message $message)
+    {
+        $blacklist_sender = $this->checkBlacklistSender($message->sender_id);
+        $sender_destination = $this->checkSenderDestination($message->sender_id, $message->destination);
+
+        if (!$blacklist_sender) {
+            return [
+                'status' => 200,
+                'message' => 'Sender ID was not found!',
+            ];
+        }
+        if (!$sender_destination) {
+            return [
+                'status' => 200,
+                'message' => 'Sender ID / Destination combination was not found!',
+            ];
+        }
+
+        FakerService::checkFakingInterval($message);
     }
 }

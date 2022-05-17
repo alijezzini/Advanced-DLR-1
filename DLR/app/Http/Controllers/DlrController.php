@@ -1,8 +1,10 @@
 <?php
 
 namespace App\Http\Controllers;
+
 use guzzle;
 use App\Models\Destination;
+use App\Repository\MessageRepository;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\DB;
@@ -11,8 +13,8 @@ use Illuminate\Support\Facades\Http;
 
 
 class DlrController extends Controller
-{   
-    
+{
+
     /**
      * Display a listing of the resource.
      *
@@ -28,12 +30,19 @@ class DlrController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function getMessage_id(Request $request)
-    {  
-        $tests = DB::table('messages')->where('terminator_message_id', '=', $request->message_id)
-        ->select('message_id','status')->get();
-        return  $tests;
-
+    public function getMessageIdAndStatus(Request $request)
+    {
+        $message = MessageRepository::getMessageById($request->message_id);
+        if (!$message) {
+            return [
+                'status' => 'Message Id was not found!'
+            ];
+        } else {
+            return [
+                'message_id' => $message->message_id,
+                'status' => $message->status,
+            ];
+        }
     }
 
     /**
@@ -43,46 +52,37 @@ class DlrController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function store(Request $request)
- {
-    
-    $RequestStatus=$request->status;
-      switch ($RequestStatus) {
+    {
+
+        $requested_status = $request->status;
+        switch ($requested_status) {
             case '2':
-                $InsertStatus ="Delivered";
+                $inserted_status = "Delivered";
                 break;
             case '3':
-                $InsertStatus ="Expired";
+                $inserted_status = "Expired";
                 break;
             case '4':
-                $InsertStatus ="Deleted";
+                $inserted_status = "Deleted";
                 break;
             case '5':
-                $InsertStatus ="Undelivered";
-                 break;
+                $inserted_status = "Undelivered";
+                break;
             case '6':
-                $InsertStatus ="Accepted";
-                 break;
+                $inserted_status = "Accepted";
+                break;
             case '7':
-                $InsertStatus ="Invalid";
-                break; 
+                $inserted_status = "Invalid";
+                break;
             case '8':
-                $InsertStatus ="Rejected";
-                break;  
+                $inserted_status = "Rejected";
+                break;
             default:
-               $InsertStatus ='Something went wrong.';
-                break;       
+                $inserted_status = 'Something went wrong.';
+                break;
         }
-        $test = DB::table('messages')
-        ->where('terminator_message_id', '=', $request->message_id)
-        ->update(['messages.status' => $InsertStatus]);
-
-        $try = [
-            'status' => 200,
-            'success' => 'Id matched successfully',
-        ];
-        
-          return $this->getMessage_id($request);
-      
+        MessageRepository::updateMessageStatus($request->message_id, $inserted_status);
+        return $this->getMessageIdAndStatus($request);
     }
 
     /**
