@@ -9,6 +9,7 @@ use DateTime;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
+use App\Repository\MessageRepository;
 
 class MessagesService
 {
@@ -26,5 +27,20 @@ class MessagesService
 
     public function updateStatus(string $message_id, string $status)
     {
+    }
+
+    public function getMessageIdAndStatus(Request $request)
+    {
+        $message = MessageRepository::getMessageById($request->message_id);
+        if (!$message) {
+            return [
+                'status' => 'Message Id was not found!'
+            ];
+        } else {
+            return [
+                'message_id' => $message[0]->message_id,
+                'status' => $message[0]->status,
+            ];
+        }
     }
 }

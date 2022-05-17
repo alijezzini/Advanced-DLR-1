@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use guzzle;
 use App\Models\Destination;
 use App\Repository\MessageRepository;
+use App\Services\MessagesService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\DB;
@@ -20,30 +21,11 @@ class DlrController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    // public function index()
-    // {
-    //     //
-    // }
-
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function getMessageIdAndStatus(Request $request)
+    public function index()
     {
-        $message = MessageRepository::getMessageById($request->message_id);
-        if (!$message) {
-            return [
-                'status' => 'Message Id was not found!'
-            ];
-        } else {
-            return [
-                'message_id' => $message[0]->message_id,
-                'status' => $message[0]->status,
-            ];
-        }
+        //
     }
+
 
     /**
      * Store a newly created resource in storage.
@@ -51,7 +33,7 @@ class DlrController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function setMessageDlr(Request $request)
     {
 
         $requested_status = $request->status;
@@ -82,7 +64,8 @@ class DlrController extends Controller
                 break;
         }
         MessageRepository::updateMessageStatus($request->message_id, $inserted_status);
-        return $this->getMessageIdAndStatus($request);
+        $message_service = new MessagesService();
+        return $message_service->getMessageIdAndStatus($request);
     }
     /* 
      * @param  int  $id

@@ -55,5 +55,5 @@ Route::group([
 |                            DLR
 |--------------------------------------------------------------------------
 */
-    Route::post('/Vendor/DLRListener', [DlrController::class, 'store']);
+    Route::post('/vendor/setDlr', [DlrController::class, 'setMessageDlr']);
 });
