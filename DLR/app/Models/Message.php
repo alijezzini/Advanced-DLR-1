@@ -9,11 +9,12 @@ class Message extends Model
 {
     use HasFactory;
     protected $fillable = [
-        'sender_id,
+        'message_id
+        sender_id,
         message_text,
-        status,
         destination,
         delivery_status,
+        status,
         terminator_message_id,
         date_recieved,
         date_sent,

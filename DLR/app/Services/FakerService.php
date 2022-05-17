@@ -7,6 +7,8 @@ use Carbon\Carbon;
 use DateTime;
 use Illuminate\Support\Str;
 use App\Repository\MessageRepository;
+use App\Repository\SourceRepository;
+use App\Repository\DestinationRepository;
 
 class FakerService
 {
@@ -15,7 +17,7 @@ class FakerService
 
     public function checkBlacklistSender(string $sender_id): bool
     {
-        $source_sender_id = MessageRepository::getSourceBySenderId($sender_id);
+        $source_sender_id = SourceRepository::getSourceBySenderId($sender_id);
 
         if ($source_sender_id->isEmpty()) {
             return false;
@@ -26,7 +28,7 @@ class FakerService
 
     public function checkSenderDestination(string $sender_id, string $destination): bool
     {
-        $sender_id_destination = MessageRepository::getSenderDestination($sender_id, $destination);
+        $sender_id_destination = DestinationRepository::getSenderDestination($sender_id, $destination);
 
         if ($sender_id_destination->isEmpty()) {
             return false;
@@ -58,15 +60,12 @@ class FakerService
         }
     }
 
-    public function generateTerminatorId(): string
-    {
-        return Str::uuid();
-    }
+
 
     public function sendTerminatorId(Message $message)
     {
-
-        $terminator_id = $this->generateTerminatorId();
+        $messages_service = new MessagesService();
+        $terminator_id = $messages_service->generateTerminatorId();
         $this->message->terminator_message_id = $terminator_id;
 
         return [

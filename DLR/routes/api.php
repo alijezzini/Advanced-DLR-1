@@ -41,8 +41,8 @@ Route::group([
 |                            Messages
 |--------------------------------------------------------------------------
 */
-    Route::post('/cdr', [MessageController::class, 'index']);
-    Route::post('/createCdr', [MessageController::class, 'create']);
+    Route::post('/message', [MessageController::class, 'index']);
+    Route::post('/message/create', [MessageController::class, 'receiveMessage']);
 
     /*
 |--------------------------------------------------------------------------

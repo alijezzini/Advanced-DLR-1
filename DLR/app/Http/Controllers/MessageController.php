@@ -86,47 +86,49 @@ class MessageController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function create(Request $request)
+    public function receiveMessage(Request $request)
     {
         $validator = Validator::make($request->all(), [
             'sender_id' => 'required',
             'message_text' => 'required',
-            'status' => 'required',
+            'status',
             'destination' => 'required',
-            'delivery_status' => 'required',
+            'delivery_status',
             'date_received' => 'required',
             'date_sent' => 'required',
             'fake',
         ]);
 
         if ($validator->fails()) {
-            $respond = [
+            $response = [
                 'status' => 401,
                 'message' => $validator->errors(),
                 'data' => null,
             ];
 
-            return $respond;
+            return $response;
         } else {
+            $messages_service = new MessagesService();
+            $terminator_message_id = $messages_service->generateTerminatorId();
             $message = new Message;
             $message->sender_id = $request->sender_id;
             $message->message_text = $request->message_text;
             $message->status = $request->status;
             $message->destination = $request->destination;
             $message->delivery_status = $request->delivery_status;
-            $message->terminator_message_id = $request->terminator_message_id;
+            $message->terminator_message_id = $terminator_message_id;
             $message->date_received = $request->date_received;
             $message->date_sent = $request->date_sent;
             $message->date_dlr = $request->date_dlr;
             $message->fake = $request->fake ?? '0';
             $message->save();
-            $respond = [
+            $response = [
                 'status' => 200,
                 'message' => 'Message object added successfully',
-                'data' => $message,
+                'terminator_message_id' => $terminator_message_id,
             ];
 
-            return $respond;
+            return $response;
         }
     }
 

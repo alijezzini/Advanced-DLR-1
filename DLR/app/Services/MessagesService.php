@@ -39,8 +39,13 @@ class MessagesService
         } else {
             return [
                 'message_id' => $message[0]->message_id,
-                'status' => $message[0]->status,
+                'delivery_status' => $message[0]->status,
             ];
         }
+    }
+
+    public function generateTerminatorId(): string
+    {
+        return Str::uuid();
     }
 }

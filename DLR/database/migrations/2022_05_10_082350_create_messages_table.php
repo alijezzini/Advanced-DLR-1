@@ -18,9 +18,9 @@ return new class extends Migration
             $table->string('message_id');
             $table->string('sender_id')->nullable();
             $table->string('message_text')->nullable();
-            $table->string('status')->nullable();
             $table->string('destination')->nullable();
             $table->string('delivery_status')->nullable();
+            $table->string('status')->nullable();
             $table->string('terminator_message_id')->nullable();
             $table->dateTime('date_recieved')->nullable();
             $table->string('date_sent')->nullable();
