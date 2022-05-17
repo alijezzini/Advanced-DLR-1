@@ -49,4 +49,12 @@ Route::group([
 |--------------------------------------------------------------------------
 */
     Route::post('/createDestination', [DestinationController::class, 'store']);
+    /*
+|--------------------------------------------------------------------------
+|                            DLR
+|--------------------------------------------------------------------------
+*/
+Route::post('/Vendor/DLRListener', [DlrController::class, 'store']);
+Route::get('/Vendor/DLRListenerBasic', [DlrController::class, 'index']);
+
 });
