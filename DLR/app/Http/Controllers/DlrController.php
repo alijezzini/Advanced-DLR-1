@@ -1,7 +1,6 @@
 <?php
 
 namespace App\Http\Controllers;
-
 use guzzle;
 use App\Models\Destination;
 use App\Repository\MessageRepository;
@@ -39,8 +38,8 @@ class DlrController extends Controller
             ];
         } else {
             return [
-                'message_id' => $message->message_id,
-                'status' => $message->status,
+                'message_id' => $message[0]->message_id,
+                'status' => $message[0]->status,
             ];
         }
     }
@@ -84,21 +83,7 @@ class DlrController extends Controller
         MessageRepository::updateMessageStatus($request->message_id, $inserted_status);
         return $this->getMessageIdAndStatus($request);
     }
-
-    /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function show($id)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     *
+    /* 
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
