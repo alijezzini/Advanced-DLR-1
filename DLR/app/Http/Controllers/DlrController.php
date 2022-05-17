@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Http\Controllers;
+
 use guzzle;
 use App\Models\Destination;
 use App\Repository\MessageRepository;
