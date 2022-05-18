@@ -59,54 +59,45 @@ class FakerService
         return $time_difference;
     }
 
-    public function checkFakingInterval()
+    public function checkFakingInterval(): bool
     {
         $time_difference = $this->getTimeDifference();
         $time_interval = MessageRepository::getTimeInterval()->time_interval;
 
         if ($time_difference > $time_interval) {
-            $this->message->fake = 1;
-
-            MessageRepository::updateMessage($this->message);
-            DestinationRepository::updateSenderDestination($this->message);
+            return true;
         } else {
-            MessagesService::sendMessage($this->message);
+            return false;
         }
-    }
-
-
-
-    public function sendTerminatorId()
-    {
-        $messages_service = new MessagesService($this->message);
-        $terminator_id = $messages_service->generateTerminatorId();
-        $this->message->terminator_message_id = $terminator_id;
-
-        return [
-            'status' => 200,
-            'terminator_message_id' => $terminator_id,
-        ];
     }
 
     public function fakingManager()
     {
-        $blacklist_sender = $this->checkBlacklistSender($this->message->sender_id);
+        $blacklist_sender = $this->checkBlacklistSender();
         if (!$blacklist_sender) {
-            return [
-                'status' => 200,
-                'message' => 'Sender ID was not found!',
-            ];
+            // not implemented yet
+            MessagesService::sendMessage($this->message);
+            return;
         }
-        $sender_destination = $this->checkSenderDestination(
-            $this->message->sender_id,
-            $this->message->destination
-        );
+        $sender_destination = $this->checkSenderDestination();
         if (!$sender_destination) {
-            return [
-                'status' => 200,
-                'message' => 'Sender ID / Destination combination was not found!',
-            ];
+            $this->message->fake = 1;
+            MessageRepository::updateMessage($this->message);
+            DestinationRepository::insertSenderDestination($this->message);
+            // not implemented yet
+            // return delivered dlr response;
+        } else {
+            $faking_interval = $this->checkFakingInterval();
+            if ($faking_interval) {
+                $this->message->fake = 1;
+                MessageRepository::updateMessage($this->message);
+                // not implemented yet
+                // return delivered dlr response;
+            } else {
+                // not implemented yet
+                MessagesService::sendMessage($this->message);
+            }
+            DestinationRepository::updateSenderDestination($this->message);
         }
-        $faking_interval = $this->checkFakingInterval($this->message);
     }
 }

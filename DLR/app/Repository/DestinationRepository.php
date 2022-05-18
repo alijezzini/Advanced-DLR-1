@@ -20,6 +20,10 @@ class DestinationRepository
         return $sender_id_destination[0];
     }
 
+    public static function insertSenderDestination(Message $message)
+    {
+    }
+
     public static function updateSenderDestination(Message $message)
     {
         DB::table('destination')

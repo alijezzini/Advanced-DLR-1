@@ -131,7 +131,6 @@ class MessageController extends Controller
             $messages_service = new MessagesService($message);
             $terminator_message_id = $messages_service->generateTerminatorId();
             $message->terminator_message_id = $terminator_message_id;
-            $this->store($request);
             $message->save();
             $response = [
                 'status' => 200,

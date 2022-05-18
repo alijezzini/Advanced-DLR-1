@@ -60,7 +60,7 @@ class DlrController extends Controller
         }
         MessageRepository::updateMessageStatus($request->message_id, $inserted_status);
         $message_service = new MessagesService();
-        return $message_service->getMessageIdAndStatus($request);
+        return $message_service->getDeliveryStatus($request);
     }
     /* 
      * @param  int  $id

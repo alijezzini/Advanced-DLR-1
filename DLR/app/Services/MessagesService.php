@@ -20,11 +20,7 @@ class MessagesService
     {
     }
 
-    public function updateMessage()
-    {
-    }
-
-    public function getMessageStatus(Request $request)
+    public function getDeliveryStatus(Request $request)
     {
         $message = MessageRepository::getMessageById($request->message_id);
         if (!$message) {
