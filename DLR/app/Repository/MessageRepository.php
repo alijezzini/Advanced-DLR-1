@@ -20,10 +20,16 @@ class MessageRepository
     public static function updateMessageStatus(int $message_id, string $status)
     {
         $update_message = DB::table('messages')
-            ->where('terminator_message_id', '=', $message_id)
+            ->where('message_id', '=', $message_id)
             ->update(['messages.status' => $status]);
     }
 
+    public static function updateDeliveryStatus(int $message_id, string $delivery_status)
+    {
+        $update_delivery_status = DB::table('message')
+            ->where('message_id', '=', $message_id)
+            ->update(['messages.status' => $delivery_status]);
+    }
 
     public static function getReceivedTime()
     {

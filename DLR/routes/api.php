@@ -42,7 +42,7 @@ Route::group([
 |--------------------------------------------------------------------------
 */
     Route::post('/message', [MessageController::class, 'index']);
-    Route::post('/message/create', [MessageController::class, 'receiveMessage']);
+    Route::post('/message/create', [MessageController::class, 'create']);
 
     /*
 |--------------------------------------------------------------------------

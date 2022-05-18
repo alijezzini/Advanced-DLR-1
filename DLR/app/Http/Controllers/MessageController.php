@@ -86,7 +86,7 @@ class MessageController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function receiveMessage(Request $request)
+    public function create(Request $request)
     {
         $validator = Validator::make($request->all(), [
             'sender_id' => 'required',
@@ -121,6 +121,7 @@ class MessageController extends Controller
             $message->date_sent = $request->date_sent;
             $message->date_dlr = $request->date_dlr;
             $message->fake = $request->fake ?? '0';
+            $this->store($request);
             $message->save();
             $response = [
                 'status' => 200,
