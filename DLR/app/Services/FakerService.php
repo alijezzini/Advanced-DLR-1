@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use App\Models\Destination;
 use App\Models\Message;
 use Carbon\Carbon;
 use App\Repository\MessageRepository;
@@ -44,22 +45,30 @@ class FakerService
 
     public function getTimeDifference(): Carbon
     {
-        $current_time = Carbon::now();
+        $old_destination = DestinationRepository::getSenderDestination(
+            $this->message->sender_id,
+            $this->message->destination
+        );
+        $old_time_received = Carbon::createFromDate(
+            $old_destination->time_received
+        );
+        $new_time_received = Carbon::createFromDate($this->message->time_received);
 
-        $time_received_carbon = Carbon::createFromDate($this->message->time_received);
-
-        $time_difference = $$time_received_carbon->diffInDays($current_time);
+        $time_difference = $$old_time_received->diffInDays($new_time_received);
 
         return $time_difference;
     }
 
     public function checkFakingInterval()
     {
-        $time_difference = $this->getTimeDifference($this->message->time_received);
-        $time_interval = MessageRepository::getTimeInterval();
+        $time_difference = $this->getTimeDifference();
+        $time_interval = MessageRepository::getTimeInterval()->time_interval;
 
-        if ($time_difference < $time_interval) {
+        if ($time_difference > $time_interval) {
             $this->message->fake = 1;
+
+            MessageRepository::updateMessage($this->message);
+            DestinationRepository::updateSenderDestination($this->message);
         } else {
             MessagesService::sendMessage($this->message);
         }
@@ -69,7 +78,7 @@ class FakerService
 
     public function sendTerminatorId()
     {
-        $messages_service = new MessagesService();
+        $messages_service = new MessagesService($this->message);
         $terminator_id = $messages_service->generateTerminatorId();
         $this->message->terminator_message_id = $terminator_id;
 
@@ -82,23 +91,22 @@ class FakerService
     public function fakingManager()
     {
         $blacklist_sender = $this->checkBlacklistSender($this->message->sender_id);
-        $sender_destination = $this->checkSenderDestination(
-            $this->message->sender_id,
-            $this->message->destination
-        );
         if (!$blacklist_sender) {
             return [
                 'status' => 200,
                 'message' => 'Sender ID was not found!',
             ];
         }
+        $sender_destination = $this->checkSenderDestination(
+            $this->message->sender_id,
+            $this->message->destination
+        );
         if (!$sender_destination) {
             return [
                 'status' => 200,
                 'message' => 'Sender ID / Destination combination was not found!',
             ];
         }
-
-        FakerService::checkFakingInterval($this->message);
+        $faking_interval = $this->checkFakingInterval($this->message);
     }
 }

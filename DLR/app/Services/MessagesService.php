@@ -9,19 +9,18 @@ use App\Repository\MessageRepository;
 
 class MessagesService
 {
-    public static function sendMessage(Message $message)
+    protected $message;
+
+    public function __construct(Message $message)
+    {
+        $this->message = $message;
+    }
+
+    public static function sendMessage()
     {
     }
 
-    public function updateMessageId(string $received_message_id, string $sent_terminator_id)
-    {
-    }
-
-    public function updateDeliveryStatus(string $message_id, string $delivery_status)
-    {
-    }
-
-    public function updateStatus(string $message_id, string $status)
+    public function updateMessage()
     {
     }
 

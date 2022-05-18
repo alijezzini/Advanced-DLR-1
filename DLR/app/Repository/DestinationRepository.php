@@ -2,7 +2,7 @@
 
 namespace App\Repository;
 
-
+use App\Models\Message;
 use Illuminate\Support\Facades\DB;
 
 class DestinationRepository
@@ -17,6 +17,17 @@ class DestinationRepository
 
             ->get();
 
-        return $sender_id_destination;
+        return $sender_id_destination[0];
+    }
+
+    public static function updateSenderDestination(Message $message)
+    {
+        DB::table('destination')
+
+            ->where('sender_id', '=', $message->sender_id)
+
+            ->where('destination', '=', $message->destination)
+
+            ->update(['time_received' => $message->date_received]);
     }
 }
