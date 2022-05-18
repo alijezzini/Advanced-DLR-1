@@ -39,4 +39,9 @@ class MessagesService
     {
         return Str::uuid();
     }
+
+    public function returnDelivered()
+    {
+        $update_dlr = "https://httpsmsc02.montymobile.com/HTTP/api/Vendor/DLRListenerBasic?ConnectionId=XXX&MessageId=XXX&Status=2";
+    }
 }

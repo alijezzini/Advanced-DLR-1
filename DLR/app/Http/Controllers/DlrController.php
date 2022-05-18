@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Message;
 use App\Repository\MessageRepository;
 use App\Services\MessagesService;
 use Illuminate\Http\Request;
@@ -58,8 +59,10 @@ class DlrController extends Controller
                 $inserted_status = 'Something went wrong.';
                 break;
         }
+        // Needs Fixing
         MessageRepository::updateMessageStatus($request->message_id, $inserted_status);
-        $message_service = new MessagesService();
+        $message = new Message();
+        $message_service = new MessagesService($message);
         return $message_service->getDeliveryStatus($request);
     }
     /* 

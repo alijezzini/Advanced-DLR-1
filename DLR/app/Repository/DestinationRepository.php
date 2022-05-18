@@ -9,7 +9,7 @@ class DestinationRepository
 {
     public static function getSenderDestination(string $sender_id, string $destination)
     {
-        $sender_id_destination = DB::table('destination')
+        $sender_id_destination = DB::table('destinations')
 
             ->where('sender_id', '=', $sender_id)
 
@@ -22,6 +22,14 @@ class DestinationRepository
 
     public static function insertSenderDestination(Message $message)
     {
+        DB::table('destinations')->insert([
+            [
+                'sender_id' => $message->sender_id,
+                'destination' => $message->destination,
+                'message_id' => $message->message_id,
+                'time_received' => $message->date_received,
+            ],
+        ]);
     }
 
     public static function updateSenderDestination(Message $message)
