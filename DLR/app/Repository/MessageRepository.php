@@ -8,7 +8,7 @@ use Illuminate\Support\Facades\DB;
 
 class MessageRepository
 {
-    public static function getMessageById(int $message_id)
+    public static function getMessageById(string $message_id)
     {
         $message = DB::table('messages')->where('terminator_message_id', '=', $message_id)
 
@@ -17,14 +17,14 @@ class MessageRepository
         return $message;
     }
 
-    public static function updateMessageStatus(int $message_id, string $status)
+    public static function updateMessageStatus(string $message_id, string $status)
     {
         $update_message = DB::table('messages')
             ->where('message_id', '=', $message_id)
             ->update(['messages.status' => $status]);
     }
 
-    public static function updateDeliveryStatus(int $message_id, string $delivery_status)
+    public static function updateDeliveryStatus(string $message_id, string $delivery_status)
     {
         $update_delivery_status = DB::table('message')
             ->where('message_id', '=', $message_id)

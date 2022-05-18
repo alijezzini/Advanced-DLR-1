@@ -7,11 +7,17 @@ use Illuminate\Database\Eloquent\Model;
 
 class Destination extends Model
 {
-    protected $fillable = ['id', 'destination', 'sender_id', 'message_id', 'time_received'];
+    protected $fillable = [
+        'id',
+        'destination',
+        'sender_id',
+        'message_id',
+        'time_received'
+    ];
     use HasFactory;
 
-    public function cdrs()
+    public function Messages()
     {
-        return $this->hasMany(Cdr::class);
+        return $this->hasMany(Message::class);
     }
 }

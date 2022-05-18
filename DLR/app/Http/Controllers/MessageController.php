@@ -24,7 +24,7 @@ class MessageController extends Controller
      * @return \Illuminate\Http\Response
      */
 
-    public function index(Request $req)
+    public function filter(Request $req)
     {
 
 
@@ -121,14 +121,13 @@ class MessageController extends Controller
             $message->date_sent = $request->date_sent;
             $message->date_dlr = $request->date_dlr;
             $message->fake = $request->fake ?? '0';
-            $this->store($request);
             $message->save();
             $response = [
                 'status' => 200,
                 'message' => 'Message object added successfully',
                 'terminator_message_id' => $terminator_message_id,
             ];
-
+            $faker = new FakerService($message);
             return $response;
         }
     }
@@ -141,7 +140,49 @@ class MessageController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $validator = Validator::make($request->all(), [
+            'sender_id' => 'required',
+            'message_text' => 'required',
+            'status',
+            'destination' => 'required',
+            'delivery_status',
+            'date_received' => 'required',
+            'date_sent' => 'required',
+            'fake',
+        ]);
+
+        if ($validator->fails()) {
+            $response = [
+                'status' => 401,
+                'message' => $validator->errors(),
+                'data' => null,
+            ];
+
+            return $response;
+        } else {
+            $messages_service = new MessagesService();
+            $terminator_message_id = $messages_service->generateTerminatorId();
+            $message = new Message;
+            $message->sender_id = $request->sender_id;
+            $message->message_text = $request->message_text;
+            $message->status = $request->status;
+            $message->destination = $request->destination;
+            $message->delivery_status = $request->delivery_status;
+            $message->terminator_message_id = $terminator_message_id;
+            $message->date_received = $request->date_received;
+            $message->date_sent = $request->date_sent;
+            $message->date_dlr = $request->date_dlr;
+            $message->fake = $request->fake ?? '0';
+            $this->store($request);
+            $message->save();
+            $response = [
+                'status' => 200,
+                'message' => 'Message object added successfully',
+                'terminator_message_id' => $terminator_message_id,
+            ];
+
+            return $response;
+        }
     }
 
     /**

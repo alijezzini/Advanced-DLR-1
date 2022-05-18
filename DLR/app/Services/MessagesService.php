@@ -3,11 +3,7 @@
 namespace App\Services;
 
 use App\Models\Message;
-use App\Models\Destination;
-use Carbon\Carbon;
-use DateTime;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
 use App\Repository\MessageRepository;
 
@@ -29,7 +25,7 @@ class MessagesService
     {
     }
 
-    public function getMessageIdAndStatus(Request $request)
+    public function getMessageStatus(Request $request)
     {
         $message = MessageRepository::getMessageById($request->message_id);
         if (!$message) {

@@ -41,8 +41,8 @@ Route::group([
 |                            Messages
 |--------------------------------------------------------------------------
 */
-    Route::post('/message', [MessageController::class, 'index']);
-    Route::post('/message/create', [MessageController::class, 'create']);
+    Route::post('/message/filter', [MessageController::class, 'filter']);
+    Route::post('/message/create', [MessageController::class, 'store']);
 
     /*
 |--------------------------------------------------------------------------
