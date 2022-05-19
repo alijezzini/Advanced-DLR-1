@@ -16,7 +16,7 @@ class Message extends Model
         delivery_status,
         status,
         terminator_message_id,
-        date_recieved,
+        date_received,
         date_sent,
         date_dlr,
         fake'
