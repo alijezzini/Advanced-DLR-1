@@ -13,9 +13,12 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('sources', function (Blueprint $table) {
-            $table->id('source_id');
-            $table->string('sender_id')->nullable();
+        Schema::create('source_destinations', function (Blueprint $table) {
+            $table->id();
+            $table->string('destination');
+            $table->string('sender_id');
+            $table->string('message_id');
+            $table->dateTime('time_received');
             $table->timestamps();
         });
     }
@@ -27,6 +30,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('sources');
+        Schema::dropIfExists('source_destinations');
     }
 };

@@ -1,11 +1,12 @@
 <?php
 
 namespace App\Http\Controllers;
+
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Http\Request;
-use App\Models\Destination;
+use App\Models\SourceDestination;
 
-class DestinationController extends Controller
+class SourceDestinationController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -26,7 +27,7 @@ class DestinationController extends Controller
     {
         //
         $input = Request::all();
-        Destination::create($input);
+        SourceDestination::create($input);
         return $input;
     }
 
@@ -39,7 +40,7 @@ class DestinationController extends Controller
     public function store(Request $request)
     {
         $validator = Validator::make($request->all(), [
-            'destination' => 'required',
+            'source_destination' => 'required',
             'sender_id' => 'required',
             'message_id' => 'required',
             'time_received' => 'required',
@@ -54,16 +55,16 @@ class DestinationController extends Controller
 
             return $respond;
         } else {
-            $destination = new Destination;
-            $destination->destination = $request->destination;
-            $destination->sender_id = $request->sender_id;
-            $destination->message_id = $request->message_id;   
-            $destination->time_received = $request->time_received;
-            $destination->save();
+            $source_destination = new SourceDestination;
+            $source_destination->source_destination = $request->source_destination;
+            $source_destination->sender_id = $request->sender_id;
+            $source_destination->message_id = $request->message_id;
+            $source_destination->time_received = $request->time_received;
+            $source_destination->save();
             $respond = [
                 'status' => 200,
-                'message' => 'destination added successfully',
-                'data' => $destination,
+                'message' => 'Source/Destination added successfully',
+                'data' => $source_destination,
             ];
             return $respond;
         }

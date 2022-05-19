@@ -13,12 +13,9 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('destinations', function (Blueprint $table) {
-            $table->id();
-            $table->string('destination');
-            $table->string('sender_id');
-            $table->string('message_id');
-            $table->dateTime('time_received');
+        Schema::create('blacklist_sources', function (Blueprint $table) {
+            $table->id('source_id');
+            $table->string('sender_id')->nullable();
             $table->timestamps();
         });
     }
@@ -30,6 +27,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('destinations');
+        Schema::dropIfExists('blacklist_sources');
     }
 };

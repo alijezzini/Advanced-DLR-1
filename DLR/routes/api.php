@@ -1,11 +1,10 @@
 <?php
 
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
-use App\Http\Controllers\SourceController;
+use App\Http\Controllers\BlacklistSourceController;
 use App\Http\Controllers\MessageController;
-use App\Http\Controllers\DestinationController;
+use App\Http\Controllers\SourceDestinationController;
 use App\Http\Controllers\DlrController;
 
 /*
@@ -33,9 +32,9 @@ Route::group([
 |                       SOURCE  "Black List"  
 |--------------------------------------------------------------------------
 */
-    Route::get('/source', [SourceController::class, 'listall']);
-    Route::post('/createSource', [SourceController::class, 'create']);
-    Route::delete('/source/{sender_id}', [SourceController::class, 'destroy']);
+    Route::get('/source', [BlacklistSourceController::class, 'listall']);
+    Route::post('/createSource', [BlacklistSourceController::class, 'create']);
+    Route::delete('/source/{sender_id}', [BlacklistSourceController::class, 'destroy']);
 
     /*
 |--------------------------------------------------------------------------
@@ -50,7 +49,7 @@ Route::group([
 |                            Destinations
 |--------------------------------------------------------------------------
 */
-    Route::post('/createDestination', [DestinationController::class, 'store']);
+    Route::post('/createDestination', [SourceDestinationController::class, 'store']);
     /*
 |--------------------------------------------------------------------------
 |                            DLR

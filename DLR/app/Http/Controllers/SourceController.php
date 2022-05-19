@@ -2,12 +2,12 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Source;
+use App\Models\BlacklistSource;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 
 
-class SourceController extends Controller
+class BlacklistSourceController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -16,7 +16,7 @@ class SourceController extends Controller
      */
     function listall()
     {
-        $source = Source::all();
+        $source = BlacklistSource::all();
         $sender_idblacklist = [
             'status' => 200,
             'message' => 'get all sender id black list successfully',
@@ -47,7 +47,7 @@ class SourceController extends Controller
 
             return $respond;
         } else {
-            $source = new Source;
+            $source = new BlacklistSource;
             $source->sender_id = $request->sender_id;
             $source->save();
             $respond = [
@@ -114,7 +114,7 @@ class SourceController extends Controller
     public function destroy($sender_id)
     {
 
-        $data = Source::where('sender_id', $sender_id);
+        $data = BlacklistSource::where('sender_id', $sender_id);
         if (isset($data)) {
             $data->delete();
             $respond = [

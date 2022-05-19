@@ -5,7 +5,7 @@ namespace App\Repository;
 
 use Illuminate\Support\Facades\DB;
 
-class SourceRepository
+class BlacklistSourceRepository
 {
 
     public static function getSourceBySenderId(string $sender_id)
