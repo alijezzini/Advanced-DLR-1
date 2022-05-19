@@ -141,7 +141,6 @@ class MessageController extends Controller
             $message->fake = $request->fake ?? '0';
             $messages_service = new MessagesService($message);
             $message->terminator_message_id = $messages_service->generateTerminatorId();
-
             $message->save();
             $response = [
                 'status' => 200,
