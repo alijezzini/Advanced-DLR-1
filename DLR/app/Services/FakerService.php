@@ -2,12 +2,11 @@
 
 namespace App\Services;
 
-use App\Models\Destination;
 use App\Models\Message;
 use Carbon\Carbon;
 use App\Repository\MessageRepository;
-use App\Repository\SourceRepository;
-use App\Repository\DestinationRepository;
+use App\Repository\BlacklistSourceRepository;
+use App\Repository\SourceDestinationRepository;
 
 class FakerService
 {
@@ -21,7 +20,7 @@ class FakerService
 
     public function checkBlacklistSender(): bool
     {
-        $source_sender_id = SourceRepository::getSourceBySenderId($this->message->sender_id);
+        $source_sender_id = BlacklistSourceRepository::getSourceBySenderId($this->message->sender_id);
 
         if ($source_sender_id->isEmpty()) {
             return false;
@@ -32,7 +31,7 @@ class FakerService
 
     public function checkSenderDestination(): bool
     {
-        $sender_id_destination = DestinationRepository::getSenderDestination(
+        $sender_id_destination = SourceDestinationRepository::getSenderDestination(
             $this->message->sender_id,
             $this->message->destination
         );
@@ -45,7 +44,7 @@ class FakerService
 
     public function getTimeDifference(): Carbon
     {
-        $old_destination = DestinationRepository::getSenderDestination(
+        $old_destination = SourceDestinationRepository::getSenderDestination(
             $this->message->sender_id,
             $this->message->destination
         );
@@ -84,7 +83,7 @@ class FakerService
             $this->message->fake = 1;
             // fake =1 
             MessageRepository::updateMessage($this->message);
-            DestinationRepository::insertSenderDestination($this->message);
+            SourceDestinationRepository::insertSenderDestination($this->message);
             // not implemented yet
             // return delivered dlr response;
         } else {
@@ -98,7 +97,7 @@ class FakerService
                 // not implemented yet
                 MessagesService::sendMessage($this->message);
             }
-            DestinationRepository::updateSenderDestination($this->message);
+            SourceDestinationRepository::updateSenderDestination($this->message);
         }
     }
 }
