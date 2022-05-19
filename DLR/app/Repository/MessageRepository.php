@@ -17,18 +17,19 @@ class MessageRepository
         return $message;
     }
 
-    public static function updateMessageStatus(string $message_id, string $status)
+    public static function updateMessageStatus(string $message_id, string $delivery_status)
     {
         $update_message = DB::table('messages')
-            ->where('message_id', '=', $message_id)
-            ->update(['status' => $status]);
+        ->where('message_id', '=', $message_id)
+        ->update(['delivery_status' => $delivery_status]);
     }
 
-    public static function updateDeliveryStatus(string $message_id, string $delivery_status)
+    public static function updateDeliveryStatus(string $message_id, string $status)
     {
-        $update_delivery_status = DB::table('message')
-            ->where('message_id', '=', $message_id)
-            ->update(['delivery_status' => $delivery_status]);
+        $update_delivery_status = DB::table('messages')
+      
+            ->where('terminator_message_id', '=', $message_id)
+            ->update(['status' => $status]);
     }
 
     public static function getReceivedTime()

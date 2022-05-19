@@ -37,8 +37,7 @@ class MessageController extends Controller
     {
 
 
-        // $out = new \Symfony\Component\Console\Output\ConsoleOutput();
-        // $out->writeln($req->enddate);
+      
 
         //get CDR table that include sender id between start date and end date.
 
@@ -107,10 +106,12 @@ class MessageController extends Controller
      */
     public function store(Request $request)
     {
+        
         $validator = Validator::make($request->all(), [
             'sender_id' => 'required',
             'message_text' => 'required',
             'status',
+            'terminator_message_id' ,
             'destination' => 'required',
             'delivery_status',
             'date_received' => 'required',
@@ -139,13 +140,15 @@ class MessageController extends Controller
             $message->date_dlr = $request->date_dlr;
             $message->fake = $request->fake ?? '0';
             $messages_service = new MessagesService($message);
-            $terminator_message_id = $messages_service->generateTerminatorId();
+            $message->terminator_message_id = $messages_service->generateTerminatorId();
+
             $message->save();
             $response = [
                 'status' => 200,
                 'message' => 'Message object added successfully',
-                'terminator_message_id' => $terminator_message_id,
+                'terminator_message_id' => $message->terminator_message_id,
             ];
+
             $faker = new FakerService($message);
             $faker->fakingManager();
             return $response;

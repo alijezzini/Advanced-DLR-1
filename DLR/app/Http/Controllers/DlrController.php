@@ -59,10 +59,11 @@ class DlrController extends Controller
                 break;
         }
         // Needs Fixing
-        MessageRepository::updateMessageStatus(
+        MessageRepository::updateDeliveryStatus(
             $request->message_id,
             $status
         );
+   
     }
     /* 
      * @param  int  $id
