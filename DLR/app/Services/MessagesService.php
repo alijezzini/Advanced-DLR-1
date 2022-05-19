@@ -43,6 +43,7 @@ class MessagesService
 
     public function returnDeliveryStatus()
     {
+        // create getConnectionId method from gatewayConnections service
         $connection_id = "";
         $message_id = $this->message->terminaton_message_id;
         $status = "";

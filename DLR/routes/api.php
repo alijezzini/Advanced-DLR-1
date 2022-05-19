@@ -43,6 +43,7 @@ Route::group([
 */
     Route::post('/message/filter', [MessageController::class, 'filter']);
     Route::post('/message/create', [MessageController::class, 'store']);
+    Route::post('/message/createMessageObject', [MessageController::class, 'createMessage']);
 
     /*
 |--------------------------------------------------------------------------

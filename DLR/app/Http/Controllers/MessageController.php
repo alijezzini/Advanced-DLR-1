@@ -11,18 +11,27 @@ use App\Services\FakerService;
 
 class MessageController extends Controller
 {
-    protected $messagesService;
-
-    public function __construct(MessagesService $messagesService)
-    {
-        $this->messagesService = $messagesService;
-    }
-
     /**
      * Display a listing of the resource.
      *
      * @return \Illuminate\Http\Response
      */
+
+    public function createMessage(Request $request)
+    {
+        $message = new Message;
+        $message->sender_id = $request->sender_id;
+        $message->message_text = $request->message_text;
+        $message->destination = $request->destination;
+        $message->delivery_status = $request->delivery_status;
+        $message->status = $request->status;
+        $message->terminator_message_id = $request->terminator_message_id ?? '';
+        $message->date_received = $request->date_received;
+        $message->date_sent = $request->date_sent;
+        $message->date_dlr = $request->date_dlr;
+        $message->fake = $request->fake ?? '0';
+        return $message;
+    }
 
     public function filter(Request $req)
     {
@@ -118,6 +127,7 @@ class MessageController extends Controller
 
             return $response;
         } else {
+            $message = $this->createMessage($request);
             $message = new Message;
             $message->sender_id = $request->sender_id;
             $message->message_text = $request->message_text;
@@ -130,7 +140,6 @@ class MessageController extends Controller
             $message->fake = $request->fake ?? '0';
             $messages_service = new MessagesService($message);
             $terminator_message_id = $messages_service->generateTerminatorId();
-            $message->terminator_message_id = $terminator_message_id;
             $message->save();
             $response = [
                 'status' => 200,
