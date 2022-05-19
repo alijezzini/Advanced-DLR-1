@@ -6,6 +6,7 @@ use App\Models\Message;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 use App\Repository\MessageRepository;
+use Illuminate\Support\Facades\Http;
 
 class MessagesService
 {
@@ -40,8 +41,10 @@ class MessagesService
         return Str::uuid();
     }
 
-    public function returnDelivered()
+    public function returnDeliveryStatus()
     {
-        $update_dlr = "https://httpsmsc02.montymobile.com/HTTP/api/Vendor/DLRListenerBasic?ConnectionId=XXX&MessageId=XXX&Status=2";
+        // $connection_id;
+        $message_id = $this->message->terminaton_message_id;
+        $update_dlr = Http::post("https://httpsmsc02.montymobile.com/HTTP/api/Vendor/DLRListenerBasic?ConnectionId=XXX&MessageId=XXX&Status=2");
     }
 }
