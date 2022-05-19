@@ -43,8 +43,12 @@ class MessagesService
 
     public function returnDeliveryStatus()
     {
-        // $connection_id;
+        $connection_id = "";
         $message_id = $this->message->terminaton_message_id;
-        $update_dlr = Http::post("https://httpsmsc02.montymobile.com/HTTP/api/Vendor/DLRListenerBasic?ConnectionId=XXX&MessageId=XXX&Status=2");
+        $status = "";
+        $update_dlr = Http::post(
+            "https://httpsmsc02.montymobile.com/HTTP/api/Vendor/DLRListenerBasic?" .
+                "ConnectionId={$connection_id}&MessageId={$message_id}&Status={$status}"
+        );
     }
 }
