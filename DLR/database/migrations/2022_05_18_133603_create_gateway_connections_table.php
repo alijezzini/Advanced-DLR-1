@@ -15,10 +15,10 @@ return new class extends Migration
     {
         Schema::create('gateway_connections', function (Blueprint $table) {
             $table->id();
-            $table->username();
-            $table->password();
-            $table->connection_id();
-            $table->api_url();
+            $table->string("username");
+            $table->string("password");
+            $table->integer("connection_id");
+            $table->string("api_url");
             $table->timestamps();
         });
     }

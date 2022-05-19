@@ -22,7 +22,7 @@ return new class extends Migration
             $table->string('delivery_status')->nullable();
             $table->string('status')->nullable();
             $table->string('terminator_message_id')->nullable();
-            $table->dateTime('date_recieved')->nullable();
+            $table->dateTime('date_received')->nullable();
             $table->string('date_sent')->nullable();
             $table->string('date_dlr')->nullable();
             $table->boolean('fake')->default(0);
