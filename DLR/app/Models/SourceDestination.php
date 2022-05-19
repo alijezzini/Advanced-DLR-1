@@ -8,7 +8,6 @@ use Illuminate\Database\Eloquent\Model;
 class SourceDestination extends Model
 {
     protected $fillable = [
-        'id',
         'destination',
         'sender_id',
         'message_id',
