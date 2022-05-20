@@ -81,7 +81,6 @@ class FakerService
         $sender_destination = $this->checkSenderDestination();
         if (!$sender_destination) {
             $this->message->fake = 1;
-            // fake =1 
             MessageRepository::updateMessage($this->message);
             SourceDestinationRepository::insertSenderDestination($this->message);
             // not implemented yet
