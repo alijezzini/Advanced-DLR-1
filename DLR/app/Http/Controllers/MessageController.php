@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
 use App\Services\MessagesService;
 use App\Services\FakerService;
+use Carbon\Carbon;
 
 class MessageController extends Controller
 {
@@ -37,7 +38,7 @@ class MessageController extends Controller
     {
 
 
-      
+
 
         //get CDR table that include sender id between start date and end date.
 
@@ -106,17 +107,14 @@ class MessageController extends Controller
      */
     public function store(Request $request)
     {
-        
+
         $validator = Validator::make($request->all(), [
-            'sender_id' => 'required',
-            'message_text' => 'required',
-            'status',
-            'terminator_message_id' ,
             'destination' => 'required',
-            'delivery_status',
-            'date_received' => 'required',
-            'date_sent' => 'required',
-            'fake',
+            'source' => 'required',
+            'content' => 'required',
+            'username' => 'required',
+            'password' => 'required',
+            'dataCoding'
         ]);
 
         if ($validator->fails()) {
@@ -128,19 +126,15 @@ class MessageController extends Controller
 
             return $response;
         } else {
-            $message = $this->createMessage($request);
             $message = new Message;
-            $message->sender_id = $request->sender_id;
-            $message->message_text = $request->message_text;
-            $message->status = $request->status;
+            $message->sender_id = $request->source;
+            $message->message_text = $request->content;
             $message->destination = $request->destination;
-            $message->delivery_status = $request->delivery_status;
-            $message->date_received = $request->date_received;
-            $message->date_sent = $request->date_sent;
-            $message->date_dlr = $request->date_dlr;
-            $message->fake = $request->fake ?? '0';
+            $message->date_received = Carbon::now();
+            $message->fake = '0';
             $messages_service = new MessagesService($message);
-            $message->terminator_message_id = $messages_service->generateTerminatorId();
+            $message->terminator_message_id = $messages_service
+                ->generateTerminatorId();
             $message->save();
             $response = [
                 'status' => 200,
