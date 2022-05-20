@@ -31,38 +31,39 @@ class DlrController extends Controller
      */
     public function setMessageDlr(Request $request)
     {
-        $request_status = $request->status;
+        $request_status = $request->delivery_status;
         switch ($request_status) {
             case '2':
-                $status = "Delivered";
+                $delivery_status = "Delivered";
                 break;
             case '3':
-                $status = "Expired";
+                $delivery_status = "Expired";
                 break;
             case '4':
-                $status = "Deleted";
+                $delivery_status = "Deleted";
                 break;
             case '5':
-                $status = "Undelivered";
+                $delivery_status = "Undelivered";
                 break;
             case '6':
-                $status = "Accepted";
+                $delivery_status = "Accepted";
                 break;
             case '7':
-                $status = "Invalid";
+                $delivery_status = "Invalid";
                 break;
             case '8':
-                $status = "Rejected";
+                $delivery_status = "Rejected";
                 break;
             default:
-                $status = 'Something went wrong.';
+                $delivery_status = 'Something went wrong.';
                 break;
         }
         // Needs Fixing
-        MessageRepository::updateMessageStatus(
+        MessageRepository::updateDeliveryStatus(
             $request->message_id,
-            $status
+            $delivery_status
         );
+   
     }
     /* 
      * @param  int  $id
