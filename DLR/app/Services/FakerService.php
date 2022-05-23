@@ -20,7 +20,7 @@ class FakerService
     }
 
     public function checkBlacklistSender(): bool
-    {           
+    {
 
         $source_sender_id = BlacklistSourceRepository::getSourceBySenderId($this->message->sender_id);
 
@@ -30,9 +30,7 @@ class FakerService
         } else {
 
             return true;
-            
         }
-
     }
 
     public function checkSenderDestination(): bool
@@ -44,7 +42,7 @@ class FakerService
         );
 
         if ($sender_id_destination->isEmpty()) {
- 
+
 
             return false;
         } else {
@@ -63,7 +61,7 @@ class FakerService
         );
         $new_time_received = Carbon::createFromDate($this->message->date_received);
 
-        $time_difference =$old_time_received->diff($new_time_received)->format('%H:%I:%S');
+        $time_difference = $old_time_received->diff($new_time_received)->format('%H:%I:%S');
         $out = new \Symfony\Component\Console\Output\ConsoleOutput();
         $out->writeln($time_difference);
 
@@ -75,7 +73,7 @@ class FakerService
         $time_difference = $this->getTimeDifference();
         $time_interval = MessageRepository::getTimeInterval();
         $out = new \Symfony\Component\Console\Output\ConsoleOutput();
-        $out->writeln($time_interval);
+        $out->writeln(strval($time_interval));
 
         if ($time_difference > $time_interval) {
 
