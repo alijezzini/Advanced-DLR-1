@@ -33,9 +33,19 @@ class DlrController extends Controller
     {
     
         $Status_Json = json_decode(file_get_contents(storage_path() . "/status.json"), true);    
-        $request_status =(string)$request->delivery_status;  
-        $delivery_status = $Status_Json[$request_status];
-        // Needs Fixing
+        $request_status =$request->delivery_status;  
+
+        if(!array_key_exists($request_status,$Status_Json))
+        {
+            return response()->json([
+            'message' => 'Delivery status does not exist in JSON file!'
+            ]);
+        }
+        else{
+            $delivery_status = $Status_Json[$request_status];
+        }
+        //Needs Fixing
+        printf($delivery_status);
         MessageRepository::updateDeliveryStatus(
             $request->message_id,
             $delivery_status
