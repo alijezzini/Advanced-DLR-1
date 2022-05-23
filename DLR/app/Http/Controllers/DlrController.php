@@ -31,40 +31,18 @@ class DlrController extends Controller
      */
     public function setMessageDlr(Request $request)
     {
-        $request_status = $request->delivery_status;
-        switch ($request_status) {
-            case '2':
-                $delivery_status = "Delivered";
-                break;
-            case '3':
-                $delivery_status = "Expired";
-                break;
-            case '4':
-                $delivery_status = "Deleted";
-                break;
-            case '5':
-                $delivery_status = "Undelivered";
-                break;
-            case '6':
-                $delivery_status = "Accepted";
-                break;
-            case '7':
-                $delivery_status = "Invalid";
-                break;
-            case '8':
-                $delivery_status = "Rejected";
-                break;
-            default:
-                $delivery_status = 'Something went wrong.';
-                break;
-        }
+    
+        $Status_Json = json_decode(file_get_contents(storage_path() . "/status.json"), true);    
+        $request_status =(string)$request->delivery_status;  
+        $delivery_status = $Status_Json[$request_status];
         // Needs Fixing
         MessageRepository::updateDeliveryStatus(
             $request->message_id,
             $delivery_status
         );
-   
+
     }
+    
     /* 
      * @param  int  $id
      * @return \Illuminate\Http\Response

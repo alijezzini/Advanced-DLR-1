@@ -112,8 +112,8 @@ class MessageController extends Controller
             'destination' => 'required',
             'source' => 'required',
             'content' => 'required',
-            'username' => 'required',
-            'password' => 'required',
+            'username',
+            'password',
             'dataCoding'
         ]);
 

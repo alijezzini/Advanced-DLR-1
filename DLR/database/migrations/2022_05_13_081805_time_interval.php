@@ -15,7 +15,7 @@ return new class extends Migration
     {
         Schema::create('time_interval', function (Blueprint $table) {
             $table->id();
-            $table->dateTime('time_interval');
+            $table->time('time_interval');
         });
     }
 

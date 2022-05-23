@@ -21,4 +21,7 @@ class Message extends Model
         date_dlr,
         fake'
     ];
+    protected $casts = [
+        'delivery_status' =>\App\Enum\StatusEnum::class,
+    ];
 }

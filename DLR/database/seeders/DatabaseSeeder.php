@@ -16,7 +16,7 @@ class DatabaseSeeder extends Seeder
     public function run()
     {
         $this->call(BlacklistSeeder::class);
-        $this->call(MessageSeeder::class);
-        $this->call(SourceDestinationSeeder::class);
+        // $this->call(MessageSeeder::class);
+        // $this->call(SourceDestinationSeeder::class);
     }
 }
