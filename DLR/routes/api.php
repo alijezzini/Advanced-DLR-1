@@ -6,6 +6,7 @@ use App\Http\Controllers\BlacklistSourceController;
 use App\Http\Controllers\MessageController;
 use App\Http\Controllers\SourceDestinationController;
 use App\Http\Controllers\DlrController;
+use App\Models\GatewayConnection;
 
 /*
 |--------------------------------------------------------------------------
@@ -57,4 +58,11 @@ Route::group([
 |--------------------------------------------------------------------------
 */
     Route::post('/vendor/setDlr', [DlrController::class, 'setMessageDlr']);
+
+    /*
+|--------------------------------------------------------------------------
+|                            Gateway Connection
+|--------------------------------------------------------------------------
+*/
+    Route::post('/gatewayConnection', [GatewayConnection::class, 'store']);
 });
