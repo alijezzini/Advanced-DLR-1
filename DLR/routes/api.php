@@ -6,7 +6,8 @@ use App\Http\Controllers\BlacklistSourceController;
 use App\Http\Controllers\MessageController;
 use App\Http\Controllers\SourceDestinationController;
 use App\Http\Controllers\DlrController;
-use App\Models\GatewayConnection;
+use App\Http\Controllers\GatewayConnectionController;
+use App\services\GatewayConnectionService;
 
 /*
 |--------------------------------------------------------------------------
@@ -64,5 +65,19 @@ Route::group([
 |                            Gateway Connection
 |--------------------------------------------------------------------------
 */
-    Route::post('/gatewayConnection', [GatewayConnection::class, 'store']);
+    Route::post('/gatewayConnection', [GatewayConnectionController::class, 'store']);
+    // Route::get('/checkGatewayConnection/{username}/{password}', function(
+    //     $username, $password   ){
+    //     return GatewayConnectionService::checkGatewayConnection($username, $password);
+    //     });
+    Route::get('/getConnectionId/{username}/{password}', function(
+        $username, $password   ){
+        return GatewayConnectionService::getConnectionId($username, $password);
+        });
+        /*
+|--------------------------------------------------------------------------
+|                            Gateway Connection
+|--------------------------------------------------------------------------
+*/
+Route::post('/client', [BlacklistSourceController::class, 'sendmessage']);
 });

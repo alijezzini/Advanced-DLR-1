@@ -19,9 +19,14 @@ class Message extends Model
         date_received,
         date_sent,
         date_dlr,
-        fake'
+        fake,
+        connection_id'
     ];
     protected $casts = [
         'delivery_status' =>\App\Enum\StatusEnum::class,
     ];
+    public function gateWayRelation()
+    {
+        return $this->hasOne(GatewayConnection::class);
+    }
 }

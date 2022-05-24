@@ -13,6 +13,7 @@ return new class extends Migration
      */
     public function up()
     {
+        Schema::dropIfExists('messages');
         Schema::create('messages', function (Blueprint $table) {
             $table->id();
             $table->string('message_id')->nullable();
@@ -26,6 +27,8 @@ return new class extends Migration
             $table->string('date_sent')->nullable();
             $table->string('date_dlr')->nullable();
             $table->boolean('fake')->default(0);
+            $table->unsignedBigInteger('connection_id');
+            $table->foreign('connection_id')->references('id')->on('gateway_connections');
             $table->timestamps();
         });
     }

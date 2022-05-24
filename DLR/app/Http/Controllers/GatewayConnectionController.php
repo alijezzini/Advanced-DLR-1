@@ -10,10 +10,26 @@ use Illuminate\Support\Facades\Validator;
 
 class GatewayConnectionController extends Controller
 {
+     
+        /**
+     * Display a listing of the resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function index()
+    {
+        
+    }
+        /**
+     * Store a newly created resource in storage.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
+     */
     public function store(Request $request)
     {
         $validator = Validator::make($request->all(), [
-            'usename' => 'required',
+            'username' => 'required',
             'password' => 'required',
             'connection_id' => 'required',
             'api_url' => 'required',
@@ -32,11 +48,11 @@ class GatewayConnectionController extends Controller
             $gateway_connection->username = $request->username;
             $gateway_connection->password = $request->password;
             $gateway_connection->connection_id = $request->connection_id;
-            $gateway_connection->api_uri = $request->api_uri;
+            $gateway_connection->api_url = $request->api_url;
             $gateway_connection->save();
             $response = [
                 'status' => 200,
-                'message' => 'Gateway COnnection added successfully',
+                'message' => 'Gateway Connection added successfully',
             ];
             return $response;
         }

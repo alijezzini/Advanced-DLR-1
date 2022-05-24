@@ -5,7 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\BlacklistSource;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
-
+use Illuminate\Support\Facades\Storage;
 
 class BlacklistSourceController extends Controller
 {
@@ -61,14 +61,20 @@ class BlacklistSourceController extends Controller
     }
 
     /**
-     * Store a newly created resource in storage.
+     * sendmessage the form for creating a new resource.
      *
-     * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    //create
+
+    public function sendmessage(Request $req)
     {
-        //
+        $data = [
+            "name" => $req->lol,
+            "title" => $req->lol2,
+        ];
+        Storage::disk('public')->put('images.json', json_encode($data));
+        return $data;
     }
 
     /**

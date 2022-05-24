@@ -93,7 +93,7 @@ class FakerService
 
         if (!$blacklist_sender) {
             // not implemented yet
-            MessagesService::sendMessage($this->message);
+            // MessagesService::sendMessage($this->message);
             return;
         }
         $sender_destination = $this->checkSenderDestination();
@@ -113,7 +113,7 @@ class FakerService
                 // return delivered dlr response;
             } else {
                 // not implemented yet
-                MessagesService::sendMessage($this->message);
+                // MessagesService::sendMessage($this->message);
             }
             SourceDestinationRepository::updateSenderDestination($this->message);
         }

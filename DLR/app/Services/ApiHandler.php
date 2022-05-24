@@ -5,14 +5,12 @@ namespace App\Services;
 use GuzzleHttp\Psr7\Request;
 use Illuminate\Http\Response;
 
-class FakerService
+class ApiHandler
 {
 
     protected $type;
     protected $url;
     protected $values;
-
-
 
     public function __construct(String $type, String $url, String $values)
     {

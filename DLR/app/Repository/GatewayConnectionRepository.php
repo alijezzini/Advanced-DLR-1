@@ -8,7 +8,7 @@ use Illuminate\Support\Facades\DB;
 class GatewayConnectionRepository
 {
 
-    public static function getSourceConnection(
+    public static function getGatewayConnection(
         string $username,
         string $password
     ) {

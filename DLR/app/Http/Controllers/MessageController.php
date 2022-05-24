@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
 use App\Services\MessagesService;
 use App\Services\FakerService;
+use App\Services\GatewayConnectionService;
 use Carbon\Carbon;
 
 class MessageController extends Controller
@@ -17,29 +18,8 @@ class MessageController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-
-    public function createMessage(Request $request)
-    {
-        $message = new Message;
-        $message->sender_id = $request->sender_id;
-        $message->message_text = $request->message_text;
-        $message->destination = $request->destination;
-        $message->delivery_status = $request->delivery_status;
-        $message->status = $request->status;
-        $message->terminator_message_id = $request->terminator_message_id ?? '';
-        $message->date_received = $request->date_received;
-        $message->date_sent = $request->date_sent;
-        $message->date_dlr = $request->date_dlr;
-        $message->fake = $request->fake ?? '0';
-        return $message;
-    }
-
     public function filter(Request $req)
     {
-
-
-
-
         //get CDR table that include sender id between start date and end date.
 
         $SenderID = DB::table('messages')
@@ -109,14 +89,14 @@ class MessageController extends Controller
     {
 
         $validator = Validator::make($request->all(), [
-            'destination' => 'required',
             'source' => 'required',
             'content' => 'required',
-            'username',
-            'password',
-            'dataCoding'
+            'destination' => 'required',
+            'username' => 'required',
+            'password' => 'required',
+            'dataCoding',
         ]);
-
+       
         if ($validator->fails()) {
             $response = [
                 'status' => 401,
@@ -126,25 +106,41 @@ class MessageController extends Controller
 
             return $response;
         } else {
-            $message = new Message;
-            $message->sender_id = $request->source;
-            $message->message_text = $request->content;
-            $message->destination = $request->destination;
-            $message->date_received = Carbon::now();
-            $message->fake = '0';
-            $messages_service = new MessagesService($message);
-            $message->terminator_message_id = $messages_service
-                ->generateTerminatorId();
-            $message->save();
-            $response = [
-                'status' => 200,
-                'message' => 'Message object added successfully',
-                'terminator_message_id' => $message->terminator_message_id,
-            ];
+            if (
+                GatewayConnectionService::checkGatewayConnection(
+                    $request->username,
+                    $request->password
+                )
+            ) {
+                $connection_id = GatewayConnectionService::getConnectionId(
+                    $request->username,
+                    $request->password
+                );
+                $message = new Message;
+                $message->sender_id = $request->source;
+                $message->message_text = $request->content;
+                $message->destination = $request->destination;
+                $message->date_received = Carbon::now();
+                $message->fake = '0';
+                $message->connection_id = $connection_id;
+                $messages_service = new MessagesService($message);
+                $message->terminator_message_id = $messages_service
+                    ->generateTerminatorId();
+                $message->save();
+                $response = [
+                    'status' => 200,
+                    'message' => 'Message object added successfully',
+                    'terminator_message_id' => $message->terminator_message_id,
+                ];
+                $faker = new FakerService($message);
+                $faker->fakingManager();
 
-            $faker = new FakerService($message);
-            $faker->fakingManager();
-            return $response;
+                return $response;
+            } else {
+                return [
+                    'status' => 'Wrong username or password!'
+                ];
+            }
         }
     }
 
