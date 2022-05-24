@@ -8,10 +8,11 @@ use Illuminate\Support\Str;
 use App\Repository\MessageRepository;
 use Illuminate\Support\Facades\Http;
 use App\Services\ApiHandler;
+
 class MessagesService
 {
 
- 
+
 
     protected $message;
 
@@ -21,24 +22,27 @@ class MessagesService
     }
 
     public  function sendMessage()
-    {    
+    {
 
         $this->message->source;
         $this->message->destination;
         $this->message->content;
 
-        $SendMessageApi=new ApiHandler("Post","http://[URL]/api/Client/SendMessage",
-        "{ 
+        $SendMessageApi = new ApiHandler(
+            "Post",
+            "http://[URL]/api/Client/SendMessage",
+            "{ 
             source:,
             destination: ,
             content:,
-        }" );
+        }"
+        );
         $SendMessageApi->requesthandler();
-        
+
         $response = [
             'status' => 200,
             'message' => 'Message send successfully',
-           
+
         ];
         return $response;
     }

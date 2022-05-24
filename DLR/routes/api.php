@@ -8,6 +8,8 @@ use App\Http\Controllers\SourceDestinationController;
 use App\Http\Controllers\DlrController;
 use App\Http\Controllers\GatewayConnectionController;
 use App\services\GatewayConnectionService;
+use App\Services\ApiHandler;
+
 
 /*
 |--------------------------------------------------------------------------
@@ -70,14 +72,27 @@ Route::group([
     //     $username, $password   ){
     //     return GatewayConnectionService::checkGatewayConnection($username, $password);
     //     });
-    Route::get('/getConnectionId/{username}/{password}', function(
-        $username, $password   ){
+    Route::get('/getConnectionId/{username}/{password}', function (
+        $username,
+        $password
+    ) {
         return GatewayConnectionService::getConnectionId($username, $password);
-        });
-        /*
+    });
+    Route::get('/callapi/{url}/{type}/{value}', function (
+        $url,
+        $type,
+        $value
+    ) {
+        // return GatewayConnectionService::getConnectionId($username, $password);
+        $apicall = new ApiHandler($url, $type, $value);
+        return $apicall->requesthandler();
+    });
+    /*
+
+        
 |--------------------------------------------------------------------------
 |                            Gateway Connection
 |--------------------------------------------------------------------------
 */
-Route::post('/client', [BlacklistSourceController::class, 'sendmessage']);
+    Route::post('/client', [BlacklistSourceController::class, 'sendmessage']);
 });
