@@ -24,10 +24,10 @@ class MessageRepository
             ->update(['status' => $status]);
     }
 
-    public static function updateDeliveryStatus(string $message_id, string $delivery_status)
+    public static function updateDeliveryStatus(string $id, string $delivery_status)
     {
         DB::table('messages')
-            ->where('terminator_message_id', '=', $message_id)
+            ->where('terminator_message_id', '=', $id)
             ->update(['delivery_status' => $delivery_status]);
     }
 
@@ -45,7 +45,7 @@ class MessageRepository
     public static function updateMessage(Message $message)
     {
         DB::table('messages')
-            ->where('message_id', '=', $message->message_id)
+            ->where('id', '=', $message->id)
             ->update(['fake' => $message->fake]);
     }
 }

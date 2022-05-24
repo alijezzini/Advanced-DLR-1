@@ -74,10 +74,6 @@ class FakerService
         // $out->writeln($time_interval->format('Y-m-d H:i:s'));
 
         if ($time_difference > $time_interval) {
-
-
-
-
             return true;
         } else {
             return false;

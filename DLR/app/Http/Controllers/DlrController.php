@@ -47,7 +47,7 @@ class DlrController extends Controller
         //Needs Fixing
         printf($delivery_status);
         MessageRepository::updateDeliveryStatus(
-            $request->message_id,
+            $request->id,
             $delivery_status
         );
 
