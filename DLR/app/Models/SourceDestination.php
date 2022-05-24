@@ -10,7 +10,6 @@ class SourceDestination extends Model
     protected $fillable = [
         'destination',
         'sender_id',
-        'message_id',
         'time_received'
     ];
     use HasFactory;

@@ -35,16 +35,16 @@ class MessageRepository
     {
     }
 
-    public static function getTimeInterval(): DateTime
+    public static function getTimeInterval()
     {
-        $time_interval = DB::table('time_interval');
+        $time_interval = DB::table('time_interval')->get();
 
-        return $time_interval->time_interval;
+        return $time_interval[0]->time_interval;
     }
 
     public static function updateMessage(Message $message)
     {
-        DB::table('message')
+        DB::table('messages')
             ->where('message_id', '=', $message->message_id)
             ->update(['fake' => $message->fake]);
     }

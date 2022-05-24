@@ -41,9 +41,8 @@ class FakerService
             $this->message->destination
         );
 
+
         if ($sender_id_destination->isEmpty()) {
-
-
             return false;
         } else {
             return true;
@@ -62,8 +61,7 @@ class FakerService
         $new_time_received = Carbon::createFromDate($this->message->date_received);
 
         $time_difference = $old_time_received->diff($new_time_received)->format('%H:%I:%S');
-        $out = new \Symfony\Component\Console\Output\ConsoleOutput();
-        $out->writeln($time_difference);
+
 
         return $time_difference;
     }
@@ -72,13 +70,12 @@ class FakerService
     {
         $time_difference = $this->getTimeDifference();
         $time_interval = MessageRepository::getTimeInterval();
-        $out = new \Symfony\Component\Console\Output\ConsoleOutput();
-        $out->writeln(strval($time_interval));
+        // $out = new \Symfony\Component\Console\Output\ConsoleOutput();
+        // $out->writeln($time_interval->format('Y-m-d H:i:s'));
 
         if ($time_difference > $time_interval) {
 
-            $out = new \Symfony\Component\Console\Output\ConsoleOutput();
-            $out->writeln('d');
+
 
 
             return true;
@@ -96,7 +93,9 @@ class FakerService
             // MessagesService::sendMessage($this->message);
             return;
         }
+
         $sender_destination = $this->checkSenderDestination();
+
 
         if (!$sender_destination) {
             $this->message->fake = 1;
@@ -104,6 +103,7 @@ class FakerService
             SourceDestinationRepository::insertSenderDestination($this->message);
             // not implemented yet
             // return delivered dlr response;
+            return "DLR Response";
         } else {
             $faking_interval = $this->checkFakingInterval();
             if ($faking_interval) {
@@ -111,9 +111,13 @@ class FakerService
                 MessageRepository::updateMessage($this->message);
                 // not implemented yet
                 // return delivered dlr response;
+                $out = new \Symfony\Component\Console\Output\ConsoleOutput();
+                $out->writeln("Send Message - 1");
             } else {
                 // not implemented yet
                 // MessagesService::sendMessage($this->message);
+                $out = new \Symfony\Component\Console\Output\ConsoleOutput();
+                $out->writeln("Send Message - 2");
             }
             SourceDestinationRepository::updateSenderDestination($this->message);
         }
