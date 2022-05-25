@@ -11,9 +11,6 @@ use App\Services\ApiHandler;
 
 class MessagesService
 {
-
-
-
     protected $message;
 
     public function __construct(Message $message)
@@ -23,59 +20,64 @@ class MessagesService
 
     public  function sendMessage()
     {
-
-        $this->message->source;
-        $this->message->destination;
-        $this->message->content;
-
-        $SendMessageApi = new ApiHandler(
+        $apicall = new ApiHandler(
             "Post",
-            "http://[URL]/api/Client/SendMessage",
-            "{ 
-            source:,
-            destination: ,
-            content:,
-        }"
+            "http://127.0.0.1:8000/api/auth/createSource",
+            '{"sender_id": "bobs"}'
         );
-        $SendMessageApi->requesthandler();
-
-        $response = [
-            'status' => 200,
-            'message' => 'Message send successfully',
-
-        ];
-        return $response;
+        return $apicall->requesthandler();
     }
 
-    public function getDeliveryStatus(Request $request)
-    {
-        $message = MessageRepository::getMessageById($request->message_id);
-        if (!$message) {
-            return [
-                'status' => 'Message Id was not found!'
-            ];
-        } else {
-            return [
-                'message_id' => $message[0]->message_id,
-                'delivery_status' => $message[0]->status,
-            ];
-        }
-    }
+    // public function getDeliveryStatus(Request $request)
+    // {
+    //     $message = MessageRepository::getMessageById($request->message_id);
+    //     if (!$message) {
+    //         return [
+    //             'status' => 'Message Id was not found!'
+    //         ];
+    //     } else {
+    //         return [
+    //             'message_id' => $message[0]->message_id,
+    //             'delivery_status' => $message[0]->status,
+    //         ];
+    //     }
+    // }
 
     public function generateTerminatorId(): string
     {
         return Str::uuid();
     }
 
-    public function returnDeliveryStatus()
+    // public function returnDeliveryStatus()
+    // {
+    //     // create getConnectionId method from gatewayConnections service
+    //     $connection_id = "";
+    //     $message_id = $this->message->terminaton_message_id;
+    //     $status = "";
+    //     $update_dlr = Http::post(
+    //         "https://httpsmsc02.montymobile.com/HTTP/api/Vendor/DLRListenerBasic?" .
+    //             "ConnectionId={$connection_id}&MessageId={$message_id}&Status={$status}"
+    //     );
+    // }
+
+    public function setMessageDlr(Request $request)
     {
-        // create getConnectionId method from gatewayConnections service
-        $connection_id = "";
-        $message_id = $this->message->terminaton_message_id;
-        $status = "";
-        $update_dlr = Http::post(
-            "https://httpsmsc02.montymobile.com/HTTP/api/Vendor/DLRListenerBasic?" .
-                "ConnectionId={$connection_id}&MessageId={$message_id}&Status={$status}"
+
+        $Status_Json = json_decode(file_get_contents(storage_path() . "/status.json"), true);
+        $request_status = $request->delivery_status;
+
+        if (!array_key_exists($request_status, $Status_Json)) {
+            return response()->json([
+                'message' => 'Delivery status does not exist in JSON file!'
+            ]);
+        } else {
+            $delivery_status = $Status_Json[$request_status];
+        }
+        //Needs Fixing
+        printf($delivery_status);
+        MessageRepository::updateDeliveryStatus(
+            $request->id,
+            $delivery_status
         );
     }
 }

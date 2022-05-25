@@ -96,7 +96,7 @@ class MessageController extends Controller
             'password' => 'required',
             'dataCoding',
         ]);
-       
+
         if ($validator->fails()) {
             $response = [
                 'status' => 401,

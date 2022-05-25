@@ -7,6 +7,9 @@ use Carbon\Carbon;
 use App\Repository\MessageRepository;
 use App\Repository\BlacklistSourceRepository;
 use App\Repository\SourceDestinationRepository;
+use App\Services\ApiHandler;
+
+
 
 class FakerService
 {
@@ -22,7 +25,9 @@ class FakerService
     public function checkBlacklistSender(): bool
     {
 
-        $source_sender_id = BlacklistSourceRepository::getSourceBySenderId($this->message->sender_id);
+        $source_sender_id = BlacklistSourceRepository::getSourceBySenderId(
+            $this->message->sender_id
+        );
 
         if ($source_sender_id->isEmpty()) {
 
@@ -36,10 +41,11 @@ class FakerService
     public function checkSenderDestination(): bool
     {
 
-        $sender_id_destination = SourceDestinationRepository::getSenderDestination(
-            $this->message->sender_id,
-            $this->message->destination
-        );
+        $sender_id_destination =
+            SourceDestinationRepository::getSenderDestination(
+                $this->message->sender_id,
+                $this->message->destination
+            );
 
 
         if ($sender_id_destination->isEmpty()) {
@@ -59,9 +65,7 @@ class FakerService
             $old_destination->time_received
         );
         $new_time_received = Carbon::createFromDate($this->message->date_received);
-
         $time_difference = $old_time_received->diff($new_time_received)->format('%H:%I:%S');
-
 
         return $time_difference;
     }
@@ -87,7 +91,7 @@ class FakerService
         if (!$blacklist_sender) {
             // not implemented yet
             // MessagesService::sendMessage($this->message);
-            return;
+            return "Send Message !blacklist_sender";
         }
 
         $sender_destination = $this->checkSenderDestination();
@@ -108,12 +112,14 @@ class FakerService
                 // not implemented yet
                 // return delivered dlr response;
                 $out = new \Symfony\Component\Console\Output\ConsoleOutput();
-                $out->writeln("Send Message - 1");
+                $out->writeln("Send Message: faking_interval is true");
             } else {
                 // not implemented yet
                 // MessagesService::sendMessage($this->message);
+                $apicall = new ApiHandler("url", "post", "{}");
+
                 $out = new \Symfony\Component\Console\Output\ConsoleOutput();
-                $out->writeln("Send Message - 2");
+                $out->writeln("Send Message: faking_interval is false");
             }
             SourceDestinationRepository::updateSenderDestination($this->message);
         }
