@@ -17,22 +17,18 @@ class MessageRepository
         return $message;
     }
 
-    public static function updateMessageStatus(string $message_id, string $status)
+    public static function updateStatus(string $message_id, string $status)
     {
         DB::table('messages')
             ->where('message_id', '=', $message_id)
             ->update(['status' => $status]);
     }
 
-    public static function updateDeliveryStatus(string $id, string $delivery_status)
+    public static function updateDeliveryStatus(Message $message)
     {
         DB::table('messages')
-            ->where('terminator_message_id', '=', $id)
-            ->update(['delivery_status' => $delivery_status]);
-    }
-
-    public static function getReceivedTime()
-    {
+            ->where('terminator_message_id', '=', $message->id)
+            ->update(['delivery_status' => $message->delivery_status]);
     }
 
     public static function getTimeInterval()
@@ -42,10 +38,17 @@ class MessageRepository
         return $time_interval[0]->time_interval;
     }
 
-    public static function updateMessage(Message $message)
+    public static function updateFakeValue(Message $message)
     {
         DB::table('messages')
             ->where('id', '=', $message->id)
             ->update(['fake' => $message->fake]);
+    }
+
+    public static function updateMessageId(Message $message)
+    {
+        DB::table('messages')
+            ->where('id', '=', $message->id)
+            ->update(['message_id' => $message->message_id]);
     }
 }

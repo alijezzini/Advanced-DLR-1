@@ -6,10 +6,8 @@ use App\Models\Message;
 use Carbon\Carbon;
 use App\Repository\MessageRepository;
 use App\Repository\BlacklistSourceRepository;
+use App\Repository\GatewayConnectionRepository;
 use App\Repository\SourceDestinationRepository;
-use App\Services\ApiHandler;
-
-
 
 class FakerService
 {
@@ -65,7 +63,9 @@ class FakerService
             $old_destination->time_received
         );
         $new_time_received = Carbon::createFromDate($this->message->date_received);
-        $time_difference = $old_time_received->diff($new_time_received)->format('%H:%I:%S');
+        $time_difference = $old_time_received
+            ->diff($new_time_received)
+            ->format('%H:%I:%S');
 
         return $time_difference;
     }
@@ -74,8 +74,6 @@ class FakerService
     {
         $time_difference = $this->getTimeDifference();
         $time_interval = MessageRepository::getTimeInterval();
-        // $out = new \Symfony\Component\Console\Output\ConsoleOutput();
-        // $out->writeln($time_interval->format('Y-m-d H:i:s'));
 
         if ($time_difference > $time_interval) {
             return true;
@@ -86,40 +84,50 @@ class FakerService
 
     public function fakingManager()
     {
+        // Checking if the sender_id is found in the blacklist table
         $blacklist_sender = $this->checkBlacklistSender();
-
         if (!$blacklist_sender) {
-            // not implemented yet
-            // MessagesService::sendMessage($this->message);
-            return "Send Message !blacklist_sender";
+            $send_message = MessagesService::sendMessage(
+                "Post",
+                "https://httpsmsc01.montymobile.com/HTTP/api/Client/SendSMS",
+                "{
+                    'destination': {$this->message->destination},
+                    'source': {$this->message->sender_id},
+                    'text': {$this->message->message_text},
+                    'dataCoding': 0
+                }"
+            );
+            $send_message_response = $send_message->json();
+            $this->message->message_id = $send_message_response["SMS"]["Id"];
+            MessageRepository::updateMessageId($this->message);
+            return;
         }
 
+        // Checking if the sender_id & destination are
+        // found in the sender_destination table
         $sender_destination = $this->checkSenderDestination();
-
-
         if (!$sender_destination) {
             $this->message->fake = 1;
-            MessageRepository::updateMessage($this->message);
-            SourceDestinationRepository::insertSenderDestination($this->message);
-            // not implemented yet
-            // return delivered dlr response;
-            return "DLR Response";
+            $this->message->delivery_status = "Delivered";
+            MessagesService::manageMessageAndDlr($this->message, 2);
+            return;
         } else {
             $faking_interval = $this->checkFakingInterval();
             if ($faking_interval) {
                 $this->message->fake = 1;
-                MessageRepository::updateMessage($this->message);
-                // not implemented yet
-                // return delivered dlr response;
-                $out = new \Symfony\Component\Console\Output\ConsoleOutput();
-                $out->writeln("Send Message: faking_interval is true");
+                $this->message->delivery_status = "Delivered";
+                MessagesService::manageMessageAndDlr($this->message, 2);
             } else {
-                // not implemented yet
-                // MessagesService::sendMessage($this->message);
-                $apicall = new ApiHandler("url", "post", "{}");
-
-                $out = new \Symfony\Component\Console\Output\ConsoleOutput();
-                $out->writeln("Send Message: faking_interval is false");
+                MessagesService::sendMessage(
+                    "Post",
+                    "https://httpsmsc02.montymobile.com/HTTP/api/Client/SendSMS",
+                    "{
+                        'destination': {$this->message->destination},
+                        'source': {$this->message->sender_id},
+                        'text': {$this->message->message_text},
+                        'dataCoding': 0
+                    }"
+                );
             }
             SourceDestinationRepository::updateSenderDestination($this->message);
         }

@@ -17,20 +17,18 @@ class ApiHandler
         $this->url = $url;
         $this->values = $values;
     }
-    public function requesthandler()
+    public function requesthandler(): Response
     {
-        $out = new \Symfony\Component\Console\Output\ConsoleOutput();
-        $out->writeln($this->type);
         if ($this->type == 'Post') {
-            $this->PostApi();
+            return $this->PostApi();
         } else {
-            $this->GetApi();
+            return $this->GetApi();
         }
     }
     public function PostApi()
     {
         $jsonobject = json_decode($this->values);
-        $post_response = Http::post($this->url, [$this->values]);
+        $post_response = Http::post($this->url, [$jsonobject]);
         return $post_response;
     }
     public function GetApi()
