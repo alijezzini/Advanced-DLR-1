@@ -8,7 +8,7 @@ use App\Http\Controllers\SourceDestinationController;
 use App\Http\Controllers\DlrController;
 use App\Http\Controllers\GatewayConnectionController;
 use App\services\GatewayConnectionService;
-use App\Services\ApiHandler;
+use App\Services\Bla;
 
 
 /*
@@ -67,26 +67,16 @@ Route::group([
 |                            Gateway Connection
 |--------------------------------------------------------------------------
 */
-    Route::post('/gatewayConnection', [GatewayConnectionController::class, 'store']);
-    // Route::get('/checkGatewayConnection/{username}/{password}', function(
-    //     $username, $password   ){
-    //     return GatewayConnectionService::checkGatewayConnection($username, $password);
-    //     });
     Route::get('/getConnectionId/{username}/{password}', function (
         $username,
         $password
     ) {
         return GatewayConnectionService::getConnectionId($username, $password);
     });
-    Route::get('/callapi/{url}/{type}/{value}', function (
-        $url,
-        $type,
-        $value
-    ) {
-        // return GatewayConnectionService::getConnectionId($username, $password);
-        $apicall = new ApiHandler($url, $type, $value);
-        return $apicall->requesthandler();
-    });
+
+
+    // Route::get('/test', [GatewayConnectionController::class, 'testing']);
+
     /*
 
         

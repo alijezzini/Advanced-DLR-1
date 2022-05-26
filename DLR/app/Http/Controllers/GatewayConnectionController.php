@@ -7,10 +7,11 @@ use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Http\Request;
 use Illuminate\Database\Schema;
 use Illuminate\Support\Facades\Validator;
+use App\Services\Bla;
 
 class GatewayConnectionController extends Controller
 {
-     
+
         /**
      * Display a listing of the resource.
      *
@@ -57,4 +58,11 @@ class GatewayConnectionController extends Controller
             return $response;
         }
     }
+    // public function testing(Request $request){
+    //     $url = $request->query('url');
+    //     $type = $request->query('type');
+    //     $value = $request->query('value');
+    //     $apicall = new Bla($type,$url,$value);
+    //     return $apicall->requesthandler();
+    //  }
 }

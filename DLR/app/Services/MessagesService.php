@@ -6,7 +6,7 @@ use App\Models\Message;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 use App\Repository\MessageRepository;
-use App\Services\ApiHandler;
+use App\Services\Bla;
 use App\Repository\SourceDestinationRepository;
 use App\Repository\GatewayConnectionRepository;
 
@@ -17,7 +17,7 @@ class MessagesService
         string $url,
         string $values
     ) {
-        $api_handler = new ApiHandler(
+        $api_handler = new Bla(
             $type,
             $url,
             $values
@@ -45,7 +45,7 @@ class MessagesService
         string $delivery_status,
         $gateway_connection
     ) {
-        $api_handler = new ApiHandler(
+        $api_handler = new Bla(
             "get",
             $gateway_connection->api_url,
             "{
