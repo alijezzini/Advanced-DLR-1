@@ -95,7 +95,7 @@ class MessagesService
             $message->connection_id
         );
         MessagesService::sendDeliveryStatus(
-            $message->message_id,
+            $message->terminator_message_id,
             $delivery_status,
             $gateway_connection
         );
