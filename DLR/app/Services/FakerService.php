@@ -113,14 +113,14 @@ class FakerService
         $sender_destination = $this->checkSenderDestination();
         if (!$sender_destination) {
             $this->message->fake = 1;
-            $this->message->delivery_status = "Delivered";
+            $this->message->delivery_status = 'Delivered';
             MessagesService::manageMessageAndDlr($this->message, 2);
             return;
         } else {
             $faking_interval = $this->checkFakingInterval();
             if ($faking_interval) {
                 $this->message->fake = 1;
-                $this->message->delivery_status = "Delivered";
+                $this->message->delivery_status = 'Delivered';
                 MessagesService::manageMessageAndDlr($this->message, 2);
             } else {
                 MessagesService::sendMessage(

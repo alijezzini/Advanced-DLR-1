@@ -40,7 +40,7 @@ class MessageRepository
     public static function updateDeliveryStatus(Message $message)
     {
         DB::table('messages')
-            ->where('terminator_message_id', '=', $message->id)
+            ->where('terminator_message_id', '=', $message->terminator_message_id)
             ->update(['delivery_status' => $message->delivery_status]);
     }
 
