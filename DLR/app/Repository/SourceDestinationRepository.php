@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\DB;
 
 class SourceDestinationRepository
 {
+    // USED
     public static function getSenderDestination(string $sender_id, string $destination)
     {
 
@@ -22,6 +23,7 @@ class SourceDestinationRepository
         return $sender_id_destination;
     }
 
+    // USED
     public static function insertSenderDestination(Message $message)
     {
         DB::table('source_destinations')->insert([
@@ -33,6 +35,7 @@ class SourceDestinationRepository
         ]);
     }
 
+    // USED
     public static function updateSenderDestination(Message $message)
     {
         DB::table('source_destinations')

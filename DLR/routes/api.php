@@ -47,7 +47,8 @@ Route::group([
 */
     Route::post('/message/filter', [MessageController::class, 'filter']);
     Route::post('/message/create', [MessageController::class, 'store']);
-    Route::post('/message/createMessageObject', [MessageController::class, 'createMessage']);
+    Route::post('/message/createMessage', [MessageController::class, 'createMessage']);
+    Route::post('/message/getDlr', [MessageController::class, 'getDLR']);
 
     /*
 |--------------------------------------------------------------------------
@@ -55,12 +56,6 @@ Route::group([
 |--------------------------------------------------------------------------
 */
     Route::post('/createDestination', [SourceDestinationController::class, 'store']);
-    /*
-|--------------------------------------------------------------------------
-|                            DLR
-|--------------------------------------------------------------------------
-*/
-    Route::post('/vendor/setDlr', [DlrController::class, 'setMessageDlr']);
 
     /*
 |--------------------------------------------------------------------------

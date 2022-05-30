@@ -2,22 +2,29 @@
 
 namespace App\Services;
 
+use App\Models\GatewayConnection;
 use App\Models\Message;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 use App\Repository\MessageRepository;
-use App\Services\Bla;
+use App\Services\ApiHandlerService;
 use App\Repository\SourceDestinationRepository;
 use App\Repository\GatewayConnectionRepository;
 
 class MessagesService
 {
+    // public static function createMessage(Tvalue $message)
+    // {
+    // }
+
+
+    // USED
     public static function sendMessage(
         string $type,
         string $url,
         string $values
     ) {
-        $api_handler = new Bla(
+        $api_handler = new ApiHandlerService(
             $type,
             $url,
             $values
@@ -25,7 +32,7 @@ class MessagesService
         return $api_handler->requesthandler();
     }
 
-    public function getDeliveryStatusDB(Request $request)
+    public function getDeliveryStatusIndexValueDB(Request $request)
     {
         $message = MessageRepository::getMessageById($request->message_id);
         if (!$message) {
@@ -40,12 +47,13 @@ class MessagesService
         }
     }
 
+    // USED
     public static function sendDeliveryStatus(
         string $message_id,
         string $delivery_status,
         $gateway_connection
     ) {
-        $api_handler = new Bla(
+        $api_handler = new ApiHandlerService(
             "get",
             $gateway_connection->api_url,
             "{
@@ -57,7 +65,7 @@ class MessagesService
         return $api_handler->requesthandler();
     }
 
-    public static function getDeliveryStatus(Request $request)
+    public  function getDeliveryStatusIndexValue(string $dlr_index): string
     {
         $delivery_status_dict = json_decode(
             file_get_contents(
@@ -65,22 +73,17 @@ class MessagesService
             ),
             true
         );
-        $request_status = $request->statusId;
 
-        if (!array_key_exists($request_status, $delivery_status_dict)) {
+        if (!array_key_exists($dlr_index, $delivery_status_dict)) {
             return response()->json([
                 'message' => 'Delivery status does not exist in JSON file!'
             ]);
         } else {
-            $delivery_status = $delivery_status_dict[$request_status];
+            return $delivery_status_dict[$dlr_index];
         }
-        //Needs Fixing
-        MessageRepository::updateDeliveryStatus(
-            $request->messageId,
-            $delivery_status
-        );
     }
 
+    // USED
     public static function manageMessageAndDlr(
         Message $message,
         int $delivery_status
@@ -98,8 +101,49 @@ class MessagesService
         );
     }
 
-    public static  function generateTerminatorId(): string
+    // USED
+    public static function generateTerminatorId(): string
     {
         return Str::uuid();
+    }
+
+    public static function dlrHandler(
+        string $message_id,
+        string $delivery_status
+    ) {
+        $message = MessageRepository::getMessageById($message_id);
+        $dlr_value = self::getDeliveryStatusIndexValue($delivery_status);
+        $message->delivery_status = $dlr_value;
+        $gateway_connection = GatewayConnectionRepository::getGatewayConnectionById(
+            $message->connection_id
+        );
+        MessageRepository::updateDeliveryStatus($message);
+        self::sendDLR(
+            'POST',
+            $gateway_connection->api_url,
+            "{
+                'terminator_id': {$message->terminator_id},
+                'delivery_status': {$delivery_status}
+            }"
+        );
+    }
+
+    /**
+     * Remove the specified resource from storage.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
+     */
+    public function sendDLR(
+        string $type,
+        string $url,
+        string $values
+    ) {
+        $api_handler = new ApiHandlerService(
+            $type,
+            $url,
+            $values
+        );
+        return $api_handler->requesthandler();
     }
 }

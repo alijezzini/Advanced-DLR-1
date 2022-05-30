@@ -8,13 +8,25 @@ use Illuminate\Support\Facades\DB;
 
 class MessageRepository
 {
+    // USED
     public static function getMessageById(string $message_id)
     {
-        $message = DB::table('messages')
+        $message = Message::table('messages')
             ->where('terminator_message_id', '=', $message_id)
-            ->get();
+            ->get()
+            ->first();
 
         return $message;
+    }
+
+    // USED
+    public static function getTimeInterval()
+    {
+        $time_interval = DB::table('time_interval')
+            ->get()
+            ->first();
+
+        return $time_interval->time_interval;
     }
 
     public static function updateStatus(string $message_id, string $status)
@@ -24,6 +36,7 @@ class MessageRepository
             ->update(['status' => $status]);
     }
 
+    // USED
     public static function updateDeliveryStatus(Message $message)
     {
         DB::table('messages')
@@ -31,13 +44,7 @@ class MessageRepository
             ->update(['delivery_status' => $message->delivery_status]);
     }
 
-    public static function getTimeInterval()
-    {
-        $time_interval = DB::table('time_interval')->get();
-
-        return $time_interval[0]->time_interval;
-    }
-
+    // USED
     public static function updateFakeValue(Message $message)
     {
         DB::table('messages')
@@ -45,6 +52,7 @@ class MessageRepository
             ->update(['fake' => $message->fake]);
     }
 
+    // USED
     public static function updateMessageId(Message $message)
     {
         DB::table('messages')

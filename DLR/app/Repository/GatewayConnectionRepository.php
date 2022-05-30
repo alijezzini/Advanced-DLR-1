@@ -20,6 +20,7 @@ class GatewayConnectionRepository
         return $gateway_connection;
     }
 
+    // USED
     public static function getGatewayConnectionById(int $id)
     {
         $gateway_connection = DB::table('gateway_connections')

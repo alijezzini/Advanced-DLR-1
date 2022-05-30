@@ -20,6 +20,7 @@ class FakerService
         $this->message = $message;
     }
 
+    // USED
     public function checkBlacklistSender(): bool
     {
 
@@ -36,6 +37,7 @@ class FakerService
         }
     }
 
+    // USED
     public function checkSenderDestination(): bool
     {
 
@@ -53,6 +55,7 @@ class FakerService
         }
     }
 
+    // USED
     public function getTimeDifference()
     {
         $old_destination = SourceDestinationRepository::getSenderDestination(
@@ -70,6 +73,7 @@ class FakerService
         return $time_difference;
     }
 
+    // USED
     public function checkFakingInterval(): bool
     {
         $time_difference = $this->getTimeDifference();
@@ -82,6 +86,7 @@ class FakerService
         }
     }
 
+    // USED
     public function fakingManager()
     {
         // Checking if the sender_id is found in the blacklist table
