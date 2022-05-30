@@ -33,7 +33,9 @@ class ApiHandlerService
     public function PostApi()
     {
         $jsonobject = json_decode($this->values);
-        $post_response = Http::post($this->url, $jsonobject);
+        $header_object = json_decode($this->header);
+
+        $post_response = Http::withHeaders(["Username" => "whatstst", "Password" => "Wh@ts@"])->post($this->url, $jsonobject);
         return $post_response;
     }
 
