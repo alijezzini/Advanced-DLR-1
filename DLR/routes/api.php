@@ -46,8 +46,7 @@ Route::group([
 |--------------------------------------------------------------------------
 */
     Route::post('/message/filter', [MessageController::class, 'filter']);
-    Route::post('/message/create', [MessageController::class, 'store']);
-    Route::post('/message/createMessage', [MessageController::class, 'createMessage']);
+    Route::post('/message/sendMessage', [MessageController::class, 'store']);
     Route::post('/message/getDlr', [MessageController::class, 'getDLR']);
 
     /*

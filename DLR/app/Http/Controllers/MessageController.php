@@ -2,7 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\GatewayConnection;
 use App\Models\Message;
+use App\Repository\GatewayConnectionRepository;
+use App\Repository\MessageRepository;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
@@ -13,63 +16,57 @@ use Carbon\Carbon;
 
 class MessageController extends Controller
 {
+    public function createMessage(
+        Request $request,
+        string $connection_id
+    ) {
+        $message = new Message;
+        $message->sender_id = $request->source;
+        $message->message_text = $request->content;
+        $message->destination = $request->destination;
+        $message->date_received = Carbon::now();
+        $message->fake = '0';
+        $message->connection_id = $connection_id;
+        $messages_service = new MessagesService($message);
+        $message->terminator_message_id = $messages_service
+            ->generateTerminatorId();
+        $message->save();
+
+        return $message;
+    }
+
     /**
      * Display a listing of the resource.
      *
      * @return \Illuminate\Http\Response
      */
-    public function filter(Request $req)
+    public function filter(Request $request)
     {
-        //get CDR table that include sender id between start date and end date.
+        $validator = Validator::make($request->all(), [
+            'sender_id',
+            'destination',
+            'start_date' => 'required',
+            'end_date' => 'required'
+        ]);
 
-        $SenderID = DB::table('messages')
+        if ($validator->fails()) {
+            $response = [
+                'status' => 401,
+                'message' => $validator->errors(),
+                'data' => null,
+            ];
 
-            ->where('sender_id', '=', $req->senderid)
-
-            ->whereBetween('date_recieved', [$req->startdate, $req->enddate])
-
-            ->get();
-
-        //get CDR table that does include destination.
-
-        $NoDestination = DB::table('messages')->whereNull('destination')->get();
-
-        //get CDR table that does not include destination.
-
-        $Destination = DB::table('messages')
-
-            ->where('destination', '=', $req->destination)
-
-            ->get();
-
-
-        $CDR_Destination  = [
-            'status' => 200,
-            'message' => 'get all destination',
-            'data' => $Destination,
-        ];
-        $CDR_NoDestination = [
-            'status' => 200,
-            'message' => 'get no destination',
-            'data' => $NoDestination,
-        ];
-        $Message = [
-            'status' => 200,
-            'message' => 'no data',
-        ];
-
-
-        if ($SenderID->count() > 0) {
-
-            if (is_null($req->destination)) {
-                return $NoDestination;
-            } else {
-                return $Destination;
-            }
+            return $response;
         } else {
-            return $Message;
+            MessagesService::searchFIlter(
+                $request->sender_id,
+                $request->destination,
+                $request->start_date,
+                $request->end_date
+            );
         }
     }
+
     /**
      * Show the form for creating a new resource.
      *
@@ -105,34 +102,27 @@ class MessageController extends Controller
 
             return $response;
         } else {
-            if (
-                GatewayConnectionService::checkGatewayConnection(
-                    $request->username,
-                    $request->password
-                )
-            ) {
-                $connection_id = GatewayConnectionService::getConnectionId(
-                    $request->username,
-                    $request->password
+            // checking if the credentials return a valid gateway connection
+            $gateway_connection = GatewayConnectionService::checkGatewayConnection(
+                $request->username,
+                $request->password
+            );
+            // 
+            if (!is_null($gateway_connection)) {
+                // Creating an instance of a Message
+                $message = $this->createMessage(
+                    $request,
+                    $gateway_connection->connection_id
                 );
-                $message = new Message;
-                $message->sender_id = $request->source;
-                $message->message_text = $request->content;
-                $message->destination = $request->destination;
-                $message->date_received = Carbon::now();
-                $message->fake = '0';
-                $message->connection_id = $connection_id;
-                $messages_service = new MessagesService($message);
-                $message->terminator_message_id = $messages_service
-                    ->generateTerminatorId();
-                $message->save();
+                //Instance of FakerService with an Type message as an attrinute
+                $faker = new FakerService($message);
+                //Faking process
+                $faker->fakingManager();
                 $response = [
                     'status' => 200,
                     'message' => 'Message object added successfully',
                     'terminator_message_id' => $message->terminator_message_id,
                 ];
-                $faker = new FakerService($message);
-                $faker->fakingManager();
 
                 return $response;
             } else {

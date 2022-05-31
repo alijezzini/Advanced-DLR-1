@@ -9,23 +9,21 @@ class GatewayConnectionService
     public static function checkGatewayConnection(
         string $username,
         string $password
-    ): bool {
-        $gateway_connection = GatewayConnectionRepository::getGatewayConnection(
+    ) {
+        $gateway_connection = GatewayConnectionRepository::getConnection(
             $username,
             $password
         );
-        if (empty($gateway_connection)) {
-            return  [
-                'status' => 403,
-                'message' => 'Invalid username or password!'
-            ];
+        if (!$gateway_connection) {
+            return  null;
         } else {
-            return true;
+            return $gateway_connection;
         }
     }
+
     public static function getConnectionId(string $username, string $password)
     {
-        $gateway_connection = GatewayConnectionRepository::getGatewayConnection(
+        $gateway_connection = GatewayConnectionRepository::getConnection(
             $username,
             $password
         );

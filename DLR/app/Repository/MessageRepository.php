@@ -5,6 +5,8 @@ namespace App\Repository;
 use App\Models\Message;
 use DateTime;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Http\Request;
+
 
 class MessageRepository
 {
@@ -40,7 +42,7 @@ class MessageRepository
     public static function updateDeliveryStatus(Message $message)
     {
         DB::table('messages')
-            ->where('terminator_message_id', '=', $message->terminator_message_id)
+            ->where('message_id', '=', $message->message_id)
             ->update(['delivery_status' => $message->delivery_status]);
     }
 
@@ -58,5 +60,46 @@ class MessageRepository
         DB::table('messages')
             ->where('id', '=', $message->id)
             ->update(['message_id' => $message->message_id]);
+    }
+
+    public static function getMessagesByDestination(
+        string $destination,
+        datetime $startdate,
+        datetime $enddate
+    ) {
+        $message = DB::table('messages')
+            ->where('destination', '=', $destination)
+            ->whereBetween('date_recieved', [$startdate, $enddate])
+            ->get();
+
+        return $message;
+    }
+
+    public static function getMessagesBySource(
+        string $source,
+        datetime $startdate,
+        datetime $enddate
+    ) {
+        $message = DB::table('messages')
+            ->where('sender_id', '=', $source)
+            ->whereBetween('date_recieved', [$startdate, $enddate])
+            ->get();
+
+        return $message;
+    }
+
+    public static function getMessagesBySourceDestination(
+        string $source,
+        string $destination,
+        datetime $startdate,
+        datetime $enddate
+    ) {
+        $message = DB::table('messages')
+            ->where('sender_id', '=', $source)
+            ->where('destination', '=', $destination)
+            ->whereBetween('date_recieved', [$startdate, $enddate])
+            ->get();
+
+        return $message;
     }
 }

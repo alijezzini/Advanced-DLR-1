@@ -10,6 +10,8 @@ use App\Repository\MessageRepository;
 use App\Services\ApiHandlerService;
 use App\Repository\SourceDestinationRepository;
 use App\Repository\GatewayConnectionRepository;
+use DateTime;
+
 
 class MessagesService
 {
@@ -91,7 +93,7 @@ class MessagesService
         MessageRepository::updateFakeValue($message);
         MessageRepository::updateDeliveryStatus($message);
         SourceDestinationRepository::insertSenderDestination($message);
-        $gateway_connection = GatewayConnectionRepository::getGatewayConnectionById(
+        $gateway_connection = GatewayConnectionRepository::getConnectionById(
             $message->connection_id
         );
         MessagesService::sendDeliveryStatus(
@@ -114,7 +116,7 @@ class MessagesService
         $message = MessageRepository::getMessageById($message_id);
         $dlr_value = self::getDeliveryStatusIndexValue($delivery_status);
         $message->delivery_status = $dlr_value;
-        $gateway_connection = GatewayConnectionRepository::getGatewayConnectionById(
+        $gateway_connection = GatewayConnectionRepository::getConnectionById(
             $message->connection_id
         );
         MessageRepository::updateDeliveryStatus($message);
@@ -145,5 +147,47 @@ class MessagesService
             $values
         );
         return $api_handler->requesthandler();
+    }
+
+    public static function searchFilter(
+        string $sender_id,
+        string $destination,
+        datetime $start_date,
+        datetime $end_date
+    ) {
+        $message = (new Message)->newQuery();
+        // request contains both source and destination
+        if (!is_null($sender_id) and !is_null($destination)) {
+            $message = MessageRepository::getMessagesBYSourceDestination(
+                $sender_id,
+                $destination,
+                $start_date,
+                $end_date
+            );
+        } else {
+            // request contains only destination
+            if (!is_null($sender_id)) {
+                $message = MessageRepository::getMessagesByDestination(
+                    $destination,
+                    $start_date,
+                    $end_date
+                );
+            } else {
+                // request contains only source
+                $message = MessageRepository::GetMessagesBYSource(
+                    $sender_id,
+                    $start_date,
+                    $end_date
+                );
+            }
+        }
+        if ($message->isEmpty()) {
+            return  [
+                'status' => 404,
+                'message' => 'No matching results!',
+            ];
+        } else {
+            return $message;
+        }
     }
 }
