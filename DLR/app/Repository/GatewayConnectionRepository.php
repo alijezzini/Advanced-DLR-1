@@ -7,7 +7,6 @@ use Illuminate\Support\Facades\DB;
 
 class GatewayConnectionRepository
 {
-
     public static function getConnection(
         string $username,
         string $password
@@ -21,13 +20,13 @@ class GatewayConnectionRepository
         return $gateway_connection;
     }
 
-    // USED
     public static function getConnectionById(int $id)
     {
         $gateway_connection = DB::table('gateway_connections')
             ->where('id', '=', $id)
-            ->get();
+            ->get()
+            ->first();
 
-        return $gateway_connection[0];
+        return $gateway_connection;
     }
 }

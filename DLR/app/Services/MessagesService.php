@@ -2,7 +2,6 @@
 
 namespace App\Services;
 
-use App\Models\GatewayConnection;
 use App\Models\Message;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
@@ -15,11 +14,6 @@ use DateTime;
 
 class MessagesService
 {
-    // public static function createMessage(Tvalue $message)
-    // {
-    // }
-
-
     // USED
     public static function sendMessage(
         string $type,
@@ -43,8 +37,8 @@ class MessagesService
             ];
         } else {
             return [
-                'message_id' => $message[0]->message_id,
-                'delivery_status' => $message[0]->status,
+                'message_id' => $message->message_id,
+                'delivery_status' => $message->status,
             ];
         }
     }
@@ -180,14 +174,13 @@ class MessagesService
 
                 // request contains only source
 
-        
-        
+
+
                 $message = MessageRepository::GetMessagesBySource(
                     $sender_id,
                     $start_date,
                     $end_date
                 );
-
             }
         }
         if ($message->isEmpty()) {
