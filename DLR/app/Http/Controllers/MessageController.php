@@ -14,6 +14,8 @@ use App\Services\FakerService;
 use App\Services\GatewayConnectionService;
 use Carbon\Carbon;
 
+
+
 class MessageController extends Controller
 {
     public function createMessage(
@@ -42,11 +44,15 @@ class MessageController extends Controller
      */
     public function filter(Request $request)
     {
+        $start_date=Carbon::createFromFormat('Y-m-d H:i:s',$request->start_date);
+        $end_date=Carbon::createFromFormat('Y-m-d H:i:s',$request->end_date);
+
         $validator = Validator::make($request->all(), [
             'sender_id',
             'destination',
-            'start_date' => 'required',
-            'end_date' => 'required'
+            // 'start_date' => 'date_format:Y-m-d',
+            'start_date'=>'required',
+            'end_date' =>'required'
         ]);
 
         if ($validator->fails()) {
@@ -58,11 +64,12 @@ class MessageController extends Controller
 
             return $response;
         } else {
-            MessagesService::searchFIlter(
+            return MessagesService::searchFIlter(
                 $request->sender_id,
                 $request->destination,
-                $request->start_date,
-                $request->end_date
+                $start_date,
+                $end_date,
+               
             );
         }
     }

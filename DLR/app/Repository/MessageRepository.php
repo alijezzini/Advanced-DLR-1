@@ -63,41 +63,42 @@ class MessageRepository
     }
 
     public static function getMessagesByDestination(
-        string $destination,
-        datetime $startdate,
-        datetime $enddate
+        string|null $destination,
+        DateTime $startdate,
+        DateTime $enddate
     ) {
         $message = DB::table('messages')
             ->where('destination', '=', $destination)
-            ->whereBetween('date_recieved', [$startdate, $enddate])
+            ->whereBetween('date_received', [$startdate, $enddate])
             ->get();
 
         return $message;
     }
 
     public static function getMessagesBySource(
-        string $source,
-        datetime $startdate,
-        datetime $enddate
+        string|null $source,
+        DateTime $startdate,
+        DateTime $enddate
     ) {
+
         $message = DB::table('messages')
             ->where('sender_id', '=', $source)
-            ->whereBetween('date_recieved', [$startdate, $enddate])
+            // ->whereBetween('date_received', [$startdate, $enddate])
             ->get();
 
         return $message;
     }
 
     public static function getMessagesBySourceDestination(
-        string $source,
-        string $destination,
-        datetime $startdate,
-        datetime $enddate
+        string|null $source,
+        string|null $destination,
+        DateTime $startdate,
+        DateTime $enddate
     ) {
         $message = DB::table('messages')
             ->where('sender_id', '=', $source)
             ->where('destination', '=', $destination)
-            ->whereBetween('date_recieved', [$startdate, $enddate])
+            ->whereBetween('date_received', [$startdate, $enddate])
             ->get();
 
         return $message;

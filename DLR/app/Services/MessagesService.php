@@ -150,35 +150,44 @@ class MessagesService
     }
 
     public static function searchFilter(
-        string $sender_id,
-        string $destination,
-        datetime $start_date,
-        datetime $end_date
+        string | null $sender_id,
+        string | null $destination,
+        DateTime | null $start_date,
+        DateTime | null $end_date
     ) {
+
         $message = (new Message)->newQuery();
         // request contains both source and destination
         if (!is_null($sender_id) and !is_null($destination)) {
+
             $message = MessageRepository::getMessagesBYSourceDestination(
                 $sender_id,
                 $destination,
                 $start_date,
                 $end_date
+
             );
         } else {
             // request contains only destination
-            if (!is_null($sender_id)) {
+            if (is_null($sender_id)) {
+
                 $message = MessageRepository::getMessagesByDestination(
                     $destination,
                     $start_date,
                     $end_date
                 );
             } else {
+
                 // request contains only source
-                $message = MessageRepository::GetMessagesBYSource(
+
+        
+        
+                $message = MessageRepository::GetMessagesBySource(
                     $sender_id,
                     $start_date,
                     $end_date
                 );
+
             }
         }
         if ($message->isEmpty()) {
