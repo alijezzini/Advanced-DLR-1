@@ -42,6 +42,10 @@ class MessageRepository
 
     public static function updateMessageId(Message $message)
     {
+        $out = new \Symfony\Component\Console\Output\ConsoleOutput();
+        $out->writeln($message->id);
+        $out->writeln($message->message_id);
+
         DB::table('messages')
             ->where('id', '=', $message->id)
             ->update(['message_id' => $message->message_id]);

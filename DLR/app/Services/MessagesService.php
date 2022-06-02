@@ -22,7 +22,7 @@ class MessagesService
     public static function sendMessage(
         string $type,
         string $url,
-        string $values
+        array $values
     ) {
         $api_handler = new ApiHandlerService(
             $type,
@@ -66,11 +66,11 @@ class MessagesService
         $api_handler = new ApiHandlerService(
             "Post",
             $gateway_connection->api_url,
-            "{
-                'ConnectionId': $gateway_connection->connection_id,
-                'MessageId': $message_id,
-                'Status': $delivery_status_index,
-            }"
+            [
+                "ConnectionId" => "{$gateway_connection->connection_id}",
+                "MessageId" => "{$message_id}",
+                "Status" => "{$delivery_status_index}"
+            ]
         );
         return $api_handler->requesthandler();
     }
@@ -176,10 +176,10 @@ class MessagesService
         self::sendDLR(
             'POST',
             $gateway_connection->api_url,
-            "{
-                'terminator_id': {$message->terminator_id},
-                'delivery_status': {$delivery_status}
-            }"
+            [
+                "terminator_id" => "{$message->terminator_id}",
+                "delivery_status" => "{$delivery_status}"
+            ]
         );
     }
 
@@ -192,7 +192,7 @@ class MessagesService
     public function sendDLR(
         string $type,
         string $url,
-        string $values
+        array $values
     ) {
         $api_handler = new ApiHandlerService(
             $type,

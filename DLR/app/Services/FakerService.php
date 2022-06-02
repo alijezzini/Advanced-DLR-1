@@ -115,6 +115,8 @@ class FakerService
     public function fakingManager()
     {
 
+
+
         /**
          * Checking if the sender_id is found in the blacklist table.
          * If not, the message will be sent again to Monty Mobile
@@ -125,18 +127,22 @@ class FakerService
 
         $blacklist_sender = $this->checkBlacklistSender();
         if (!$blacklist_sender) {
+
+
             $send_message = MessagesService::sendMessage(
                 "Post",
-                "https://httpsmsc01.montymobile.com/HTTP/api/Client/SendSMS",
-                "{
-                    'destination': {$this->message->destination},
-                    'source': {$this->message->sender_id},
-                    'text': {$this->message->message_text},
-                    'dataCoding': 0
-                }"
+                "https://httpsmsc02.montymobile.com/HTTP/api/Client/SendSMS",
+                [
+                    "destination" => "{$this->message->destination}",
+                    "source" => "{$this->message->sender_id}",
+                    "text" => "{$this->message->message_text}",
+                    "dataCoding" => "0"
+                ]
             );
-            $send_message_response = $send_message->json();
-            $this->message->message_id = $send_message_response["SMS"]["Id"];
+            // $send_message_response = $send_message->json();
+            // $out = new \Symfony\Component\Console\Output\ConsoleOutput();
+            // $out->writeln($send_message['SMS'][0]['Id']);
+            $this->message->message_id = $send_message['SMS'][0]['Id'];
             MessageRepository::updateMessageId($this->message);
             return;
         }
@@ -168,12 +174,12 @@ class FakerService
                 MessagesService::sendMessage(
                     "Post",
                     "https://httpsmsc02.montymobile.com/HTTP/api/Client/SendSMS",
-                    "{
-                        'destination': {$this->message->destination},
-                        'source': {$this->message->sender_id},
-                        'text': {$this->message->message_text},
-                        'dataCoding': 0
-                    }"
+                    [
+                        "destination" => "{$this->message->destination}",
+                        "source" => "{$this->message->sender_id}",
+                        "text" => "{$this->message->message_text}",
+                        "dataCoding" => 0
+                    ]
                 );
             }
             SourceDestinationRepository::updateSenderDestination($this->message);
