@@ -19,18 +19,16 @@ class ApiHandlerService
         $this->values = $values;
     }
 
-    // USED
-    public function requesthandler()
+    public function requestHandler()
     {
         if ($this->type == 'Post') {
-            return $this->PostApi();
+            return $this->postApi();
         } else {
-            return $this->GetApi();
+            return $this->getApi();
         }
     }
 
-    // USED
-    public function PostApi()
+    public function postApi()
     {
         $jsonobject = json_decode($this->values);
         $header_object = json_decode($this->header);
@@ -39,8 +37,7 @@ class ApiHandlerService
         return $post_response;
     }
 
-    // USED
-    public function GetApi()
+    public function getApi()
     {
         $jsonobject = json_decode($this->values);
         $getvariables = "";

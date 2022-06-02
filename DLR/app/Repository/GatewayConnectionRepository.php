@@ -2,7 +2,7 @@
 
 namespace App\Repository;
 
-
+use App\Models\GatewayConnection;
 use Illuminate\Support\Facades\DB;
 
 class GatewayConnectionRepository
@@ -20,10 +20,13 @@ class GatewayConnectionRepository
         return $gateway_connection;
     }
 
-    public static function getConnectionById(int $id)
+    public static function getConnectionByConnectionId(int $connection_id)
     {
-        $gateway_connection = DB::table('gateway_connections')
-            ->where('id', '=', $id)
+        $gateway_connection = GatewayConnection::where(
+            'connection_id',
+            '=',
+            $connection_id
+        )
             ->get()
             ->first();
 

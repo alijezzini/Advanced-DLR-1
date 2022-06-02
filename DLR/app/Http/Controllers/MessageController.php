@@ -104,16 +104,12 @@ class MessageController extends Controller
                 $request->username,
                 $request->password
             );
-            // 
             if (!is_null($gateway_connection)) {
-                // Creating an instance of a Message
                 $message = $this->createMessage(
                     $request,
                     $gateway_connection->connection_id
                 );
-                //Instance of FakerService with an Type message as an attrinute
                 $faker = new FakerService($message);
-                //Faking process
                 $faker->fakingManager();
                 $response = [
                     'status' => 200,

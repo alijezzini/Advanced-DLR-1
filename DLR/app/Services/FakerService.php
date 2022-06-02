@@ -8,6 +8,7 @@ use App\Repository\MessageRepository;
 use App\Repository\BlacklistSourceRepository;
 use App\Repository\GatewayConnectionRepository;
 use App\Repository\SourceDestinationRepository;
+use App\Repository\TimeIntervalRepository;
 
 class FakerService
 {
@@ -20,7 +21,13 @@ class FakerService
         $this->message = $message;
     }
 
-    // USED
+
+
+    /**
+     * checkBlacklistSender
+     *
+     * @return bool
+     */
     public function checkBlacklistSender(): bool
     {
 
@@ -37,7 +44,11 @@ class FakerService
         }
     }
 
-    // USED
+    /**
+     * checkSenderDestination
+     *
+     * @return bool
+     */
     public function checkSenderDestination(): bool
     {
 
@@ -55,7 +66,12 @@ class FakerService
         }
     }
 
-    // USED
+
+    /**
+     * getTimeDifference
+     *
+     * @return void
+     */
     public function getTimeDifference()
     {
         $old_destination = SourceDestinationRepository::getSenderDestination(
@@ -73,11 +89,16 @@ class FakerService
         return $time_difference;
     }
 
-    // USED
+
+    /**
+     * checkFakingInterval
+     *
+     * @return bool
+     */
     public function checkFakingInterval(): bool
     {
         $time_difference = $this->getTimeDifference();
-        $time_interval = MessageRepository::getTimeInterval();
+        $time_interval = TimeIntervalRepository::getTimeInterval();
 
         if ($time_difference > $time_interval) {
             return true;
@@ -86,10 +107,19 @@ class FakerService
         }
     }
 
-    // USED
+    /**
+     * fakingManager
+     *
+     * @return void
+     */
     public function fakingManager()
     {
-        // Checking if the sender_id is found in the blacklist table
+        /**
+         * Checking if the sender_id is found in the blacklist table.
+         * If not, the message will be sent again to Monty Mobile
+         * through an API. The API responce will contain a new
+         * message_id that we will update our Message object with
+         */
         $blacklist_sender = $this->checkBlacklistSender();
         if (!$blacklist_sender) {
             $send_message = MessagesService::sendMessage(
@@ -107,21 +137,30 @@ class FakerService
             MessageRepository::updateMessageId($this->message);
             return;
         }
-
-        // Checking if the sender_id & destination are
-        // found in the sender_destination table
+        /**
+         * Checking if the sender_id & destination are
+         * found in the sender_destination table
+         * if not, we will fake the message and add it to
+         * the sender_destination table
+         */
         $sender_destination = $this->checkSenderDestination();
         if (!$sender_destination) {
             $this->message->fake = 1;
             $this->message->delivery_status = 'Delivered';
-            MessagesService::manageMessageAndDlr($this->message, 2);
+            MessagesService::messageManager(
+                $this->message,
+                MessagesService::getDeliveryStatusIndexValue($this->message->delivery_status)
+            );
             return;
         } else {
             $faking_interval = $this->checkFakingInterval();
             if ($faking_interval) {
                 $this->message->fake = 1;
                 $this->message->delivery_status = 'Delivered';
-                MessagesService::manageMessageAndDlr($this->message, 2);
+                MessagesService::messageManager(
+                    $this->message,
+                    MessagesService::getDeliveryStatusIndexValue($this->message->delivery_status)
+                );
             } else {
                 MessagesService::sendMessage(
                     "Post",
