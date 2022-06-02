@@ -9,7 +9,7 @@ use App\Services\MessagesService;
 use App\Services\FakerService;
 use App\Services\GatewayConnectionService;
 use Carbon\Carbon;
-
+use App\Services\TotalMessages;
 
 
 class MessageController extends Controller
@@ -20,15 +20,16 @@ class MessageController extends Controller
      */
     public function createMessage(
         Request $request,
-        string $connection_id
+        int $message_connection_id
     ): Message {
+
         $message = new Message;
         $message->sender_id = $request->source;
         $message->message_text = $request->content;
         $message->destination = $request->destination;
         $message->date_received = Carbon::now();
         $message->fake = '0';
-        $message->connection_id = $connection_id;
+        $message->connection_id = $message_connection_id;
         $messages_service = new MessagesService($message);
         $message->terminator_message_id = $messages_service
             ->generateTerminatorId();
@@ -72,6 +73,62 @@ class MessageController extends Controller
             );
         }
     }
+    /**
+     * Show the form for creating a new resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function TotalSMS(Request $request)
+    {
+
+        $validator = Validator::make($request->all(), [
+            'year',
+            'month',
+            'day',
+        ]);
+
+        if ($validator->fails()) {
+            $response = [
+                'status' => 401,
+                'message' => $validator->errors(),
+                'data' => null,
+            ];
+
+            return $response;
+        } else {
+            return TotalMessages::findTotalMessages(
+                $request->year,
+                $request->month,
+                $request->day,
+            );
+        }
+    }
+    /**
+     * Show the form for creating a new resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function TotalSender(Request $request)
+    {
+
+        $validator = Validator::make($request->all(), [
+            'sender',
+        ]);
+
+        if ($validator->fails()) {
+            $response = [
+                'status' => 401,
+                'message' => $validator->errors(),
+                'data' => null,
+            ];
+
+            return $response;
+        } else {
+            return TotalMessages::findTotalSenders(
+                $request->sender,
+            );
+        }
+    }
 
     /**
      * Store a newly created resource in storage.
@@ -104,11 +161,13 @@ class MessageController extends Controller
                 $request->username,
                 $request->password
             );
+
             if (!is_null($gateway_connection)) {
                 $message = $this->createMessage(
                     $request,
-                    $gateway_connection->connection_id
+                    $gateway_connection->id
                 );
+
                 $faker = new FakerService($message);
                 $faker->fakingManager();
                 $response = [

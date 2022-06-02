@@ -32,4 +32,17 @@ class GatewayConnectionRepository
 
         return $gateway_connection;
     }
+
+    public static function getConnectionById(int $id)
+    {
+        $gateway_connection = GatewayConnection::where(
+            'id',
+            '=',
+            $id
+        )
+            ->get()
+            ->first();
+
+        return $gateway_connection;
+    }
 }

@@ -79,4 +79,14 @@ Route::group([
 |--------------------------------------------------------------------------
 */
     Route::post('/client', [BlacklistSourceController::class, 'sendmessage']);
+    /*
+
+        
+|--------------------------------------------------------------------------
+|                          Numbers Of total and fake  Messages.
+|                          Numbers Of total and fake  Senders.
+|--------------------------------------------------------------------------
+*/
+    Route::post('/totalSms', [MessageController::class, 'TotalSMS']);  
+    Route::post('/totalSender', [MessageController::class, 'TotalSender']); 
 });

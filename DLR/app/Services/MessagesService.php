@@ -137,7 +137,7 @@ class MessagesService
         MessageRepository::updateDeliveryStatus($message);
         SourceDestinationRepository::insertSenderDestination($message);
         $gateway_connection =
-            GatewayConnectionRepository::getConnectionByConnectionId(
+            GatewayConnectionRepository::getConnectionById(
                 $message->connection_id
             );
         MessagesService::sendDeliveryStatus(
@@ -169,7 +169,7 @@ class MessagesService
         $message = MessageRepository::getMessageById($message_id);
         $dlr_value = self::getDeliveryStatusValue($delivery_status);
         $message->delivery_status = $dlr_value;
-        $gateway_connection = GatewayConnectionRepository::getConnectionByConnectionId(
+        $gateway_connection = GatewayConnectionRepository::getConnectionById(
             $message->connection_id
         );
         MessageRepository::updateDeliveryStatus($message);
