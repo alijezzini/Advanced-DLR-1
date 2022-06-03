@@ -9,4 +9,5 @@ class TimeInterval extends Model
 {
     protected $fillable = ['time_interval'];
     use HasFactory;
+    public $timestamps = false;
 }

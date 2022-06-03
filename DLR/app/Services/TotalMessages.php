@@ -8,7 +8,7 @@ use App\Repository\TotalMessageRepository;
 
 class TotalMessages
 {
-    public static function FindFakeMessages($messages)
+    public static function fakeMessages($messages)
     {
         $aux = array();
         foreach ($messages as $message) {
@@ -20,11 +20,10 @@ class TotalMessages
     }
 
 
-    public static function findTotalMessages(
+    public static function totalMessages(
         string | null $year,
         string | null $month,
         string | null $day,
-
     ) {
         if (is_null($year) and is_null($month) and is_null($day)) {
             $messages = TotalMessageRepository::getAllMessages();
@@ -41,25 +40,25 @@ class TotalMessages
             }
         }
         $total_messages_number = $messages->count();
-        $totalfake = count(self::FindFakeMessages($messages));
+        $totalfake = count(self::fakeMessages($messages));
         return  [
             'status' => 404,
-            'numbers Of total Messages' => $total_messages_number,
-            'numbers Of fake Messages' => $totalfake,
+            'Number of total messages' => $total_messages_number,
+            'Number of fake messages' => $totalfake,
         ];
     }
-    
-        public static function findTotalSenders(
-            string | null $sender,
-        ) {
-            $Senders = TotalMessageRepository::getSender($sender);
 
-            $total_senders_number = $Senders->count();
-            $totalfake = count(self::FindFakeMessages($Senders));
-            return  [
-                'status' => 404,
-                'numbers Of total Senders' => $total_senders_number,
-                'numbers Of fake Senders' => $totalfake,
-            ];
-        }
+    public static function totalSenders(
+        string | null $sender,
+    ) {
+        $Senders = TotalMessageRepository::getSender($sender);
+
+        $total_senders_number = $Senders->count();
+        $totalfake = count(self::fakeMessages($Senders));
+        return  [
+            'status' => 404,
+            'Number of total senders' => $total_senders_number,
+            'Number of fake senders' => $totalfake,
+        ];
+    }
 }

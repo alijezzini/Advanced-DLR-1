@@ -64,7 +64,7 @@ class MessagesService
         GatewayConnection $gateway_connection
     ) {
         $api_handler = new ApiHandlerService(
-            "Post",
+            "Get",
             $gateway_connection->api_url,
             [
                 "ConnectionId" => "{$gateway_connection->connection_id}",
@@ -133,6 +133,7 @@ class MessagesService
         Message $message,
         string $delivery_status_index
     ) {
+
         MessageRepository::updateFakeValue($message);
         MessageRepository::updateDeliveryStatus($message);
         SourceDestinationRepository::insertSenderDestination($message);
@@ -140,11 +141,13 @@ class MessagesService
             GatewayConnectionRepository::getConnectionById(
                 $message->connection_id
             );
-        MessagesService::sendDeliveryStatus(
+        $test = MessagesService::sendDeliveryStatus(
             $message->terminator_message_id,
             $delivery_status_index,
             $gateway_connection
         );
+        $out = new \Symfony\Component\Console\Output\ConsoleOutput();
+        $out->writeln($test["ErrorDescription"]);
     }
 
     /**

@@ -2,11 +2,10 @@
 
 namespace Database\Seeders;
 
-use App\Models\GatewayConnection;
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
+use App\Models\TimeInterval;
 
-class GatewayConnectionsSeeder extends Seeder
+class TimeIntervalSeeder extends Seeder
 {
     /**
      * Run the database seeds.
@@ -15,6 +14,8 @@ class GatewayConnectionsSeeder extends Seeder
      */
     public function run()
     {
-        GatewayConnection::create([]);
+        TimeInterval::create([
+            'time_interval' => '00:03:00',
+        ]);
     }
 }

@@ -139,9 +139,6 @@ class FakerService
                     "dataCoding" => "0"
                 ]
             );
-            // $send_message_response = $send_message->json();
-            // $out = new \Symfony\Component\Console\Output\ConsoleOutput();
-            // $out->writeln($send_message['SMS'][0]['Id']);
             $this->message->message_id = $send_message['SMS'][0]['Id'];
             MessageRepository::updateMessageId($this->message);
             return;
@@ -153,7 +150,9 @@ class FakerService
          * the sender_destination table
          */
         $sender_destination = $this->checkSenderDestination();
+
         if (!$sender_destination) {
+
             $this->message->fake = 1;
             $this->message->delivery_status = 'Delivered';
             MessagesService::messageManager(

@@ -24,6 +24,7 @@ class ApiHandlerService
         if ($this->type == 'Post') {
             return $this->postApi();
         } else {
+
             return $this->getApi();
         }
     }
@@ -32,15 +33,11 @@ class ApiHandlerService
     {
 
         $headers = [
-            'Accept' => 'application/json',
-            'Content-Type' => 'application/json',
-            'Authorization' => 'Bearer ' . 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOlwvXC8xMjcuMC4wLjE6ODAwMFwvYXBpXC9sb2dpbiIsImlhdCI6MTY0ODY0NjU1MywiZXhwIjoxNjQ4NjUwMTUzLCJuYmYiOjE2NDg2NDY1NTMsImp0aSI6ImhJZmU3WkZXa2Z2aDczTEMiLCJzdWIiOjEsInBydiI6IjIzYmQ1Yzg5NDlmNjAwYWRiMzllNzAxYzQwMDg3MmRiN2E1OTc2ZjcifQ.J-HVmLLC2q7urzp-7roDq2XgjrNzQ4S99W85jyXQTDc',
             'Username' => 'whatstst',
             'Password' => 'Wh@ts@'
         ];
         $post_response = Http::withHeaders($headers)->post($this->url, $this->values);
-        // $out = new \Symfony\Component\Console\Output\ConsoleOutput();
-        // $out->writeln($post_response);
+
 
         return $post_response;
     }
@@ -60,8 +57,10 @@ class ApiHandlerService
                 $getvariables .= $key . "=" . $value . "&";
             }
         }
+        $out = new \Symfony\Component\Console\Output\ConsoleOutput();
+        $out->writeln($this->url.$getvariables);
         $getresponse = Http::get(
-            $this->url . $getvariables
+            $this->url.$getvariables
         );
         return $getresponse;
     }

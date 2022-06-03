@@ -14,13 +14,12 @@ class TotalMessageRepository
         $message = DB::table('messages')
             ->get();
 
-
         return $message;
     }
     public static function getYearMonthDay(
-        string|null $year,
-        string|null $month,
-        string|null $day
+        string | null $year,
+        string | null $month,
+        string | null $day
     )
 
     // Case 2
@@ -57,14 +56,14 @@ class TotalMessageRepository
 
         return $message;
     }
-        // total of senders
-        public static function getSender(
-            string|null $sender,
-        ) {
-            $message = DB::table('messages')
-               ->where('sender_id', $sender)
-                ->get();
-    
-            return $message;
-        }
+    // total of senders
+    public static function getSender(
+        string|null $sender,
+    ) {
+        $message = DB::table('messages')
+            ->where('sender_id', $sender)
+            ->get();
+
+        return $message;
+    }
 }

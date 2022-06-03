@@ -13,7 +13,7 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('time_interval', function (Blueprint $table) {
+        Schema::create('time_intervals', function (Blueprint $table) {
             $table->id();
             $table->time('time_interval');
         });
@@ -26,6 +26,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('time_interval');
+        Schema::dropIfExists('time_intervals');
     }
 };

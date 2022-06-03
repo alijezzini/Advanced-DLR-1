@@ -5,6 +5,7 @@ namespace Database\Seeders;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 use App\Models\BlacklistSource;
+
 class BlacklistSeeder extends Seeder
 {
     /**
@@ -16,7 +17,12 @@ class BlacklistSeeder extends Seeder
     {
         BlacklistSource::create([
             'sender_id' => 'microsoft',
-          
+        ]);
+        BlacklistSource::create([
+            'sender_id' => 'google',
+        ]);
+        BlacklistSource::create([
+            'sender_id' => 'facebook',
         ]);
     }
 }
