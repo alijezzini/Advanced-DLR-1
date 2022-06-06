@@ -169,20 +169,18 @@ class MessagesService
         string $delivery_status
     ) {
         $message = MessageRepository::getMessageById($message_id);
-        $dlr_value = self::getDeliveryStatusValue($delivery_status);
-        $message->delivery_status = $dlr_value;
+        $message->delivery_status = $delivery_status;
         $gateway_connection = GatewayConnectionRepository::getConnectionById(
             $message->connection_id
         );
         MessageRepository::updateDeliveryStatus($message);
-        self::sendDLR(
-            'POST',
-            $gateway_connection->api_url,
-            [
-                "terminator_id" => "{$message->terminator_id}",
-                "delivery_status" => "{$delivery_status}"
-            ]
+
+         MessagesService::sendDeliveryStatus(
+            $message->terminator_message_id,
+            $delivery_status,
+            $gateway_connection
         );
+
     }
 
     /**

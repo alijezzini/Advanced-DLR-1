@@ -27,11 +27,6 @@ class GatewayConnectionsSeeder extends Seeder
             'connection_id' => '777777',
             'api_url' => 'https://httpsmsc02.montymobile.com/HTTP/api/Vendor/DLRListener?'
         ]);
-        GatewayConnection::create([
-            'username' => 'whatmt',
-            'password' => 'Wh!t@2',
-            'connection_id' => '6357',
-            'api_url' => 'https://httpsmsc02.montymobile.com/HTTP/api/Vendor/DLRListener?'
-        ]);
+
     }
 }
