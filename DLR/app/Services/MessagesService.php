@@ -136,7 +136,6 @@ class MessagesService
 
         MessageRepository::updateFakeValue($message);
         MessageRepository::updateDeliveryStatus($message);
-        SourceDestinationRepository::insertSenderDestination($message);
         $gateway_connection =
             GatewayConnectionRepository::getConnectionById(
                 $message->connection_id

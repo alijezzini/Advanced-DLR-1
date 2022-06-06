@@ -45,8 +45,9 @@ Route::group([
 |                            Messages
 |--------------------------------------------------------------------------
 */
+    Route::post('/message/create', [MessageController::class, 'createMessage']);
     Route::post('/message/filter', [MessageController::class, 'filter']);
-    Route::post('/message/sendMessage', [MessageController::class, 'store']);
+    Route::post('/message/send', [MessageController::class, 'store']);
     Route::post('/message/getDlr', [MessageController::class, 'getDLR']);
 
     /*
@@ -87,6 +88,6 @@ Route::group([
 |                          Numbers Of total and fake  Senders.
 |--------------------------------------------------------------------------
 */
-    Route::post('/totalSms', [MessageController::class, 'TotalSMS']);  
-    Route::post('/totalSender', [MessageController::class, 'TotalSender']); 
+    Route::post('/totalSms', [MessageController::class, 'TotalSMS']);
+    Route::post('/totalSender', [MessageController::class, 'TotalSender']);
 });

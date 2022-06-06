@@ -22,7 +22,8 @@ class Message extends Model
         fake,
         connection_id'
     ];
-    public function gateWayRelation()
+
+    public function gatewayRelation()
     {
         return $this->hasOne(GatewayConnection::class);
     }

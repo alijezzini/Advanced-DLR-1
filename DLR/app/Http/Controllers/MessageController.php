@@ -96,7 +96,7 @@ class MessageController extends Controller
 
             return $response;
         } else {
-            return TotalMessages::findTotalMessages(
+            return TotalMessages::totalMessages(
                 $request->year,
                 $request->month,
                 $request->day,
@@ -124,7 +124,7 @@ class MessageController extends Controller
 
             return $response;
         } else {
-            return TotalMessages::findTotalSenders(
+            return TotalMessages::totalSenders(
                 $request->sender,
             );
         }

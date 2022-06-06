@@ -155,6 +155,7 @@ class FakerService
 
             $this->message->fake = 1;
             $this->message->delivery_status = 'Delivered';
+            SourceDestinationRepository::insertSenderDestination($this->message);
             MessagesService::messageManager(
                 $this->message,
                 MessagesService::getDeliveryStatusIndexValue($this->message->delivery_status)
@@ -165,6 +166,7 @@ class FakerService
             if ($faking_interval) {
                 $this->message->fake = 1;
                 $this->message->delivery_status = 'Delivered';
+                SourceDestinationRepository::updateSenderDestination($this->message);
                 MessagesService::messageManager(
                     $this->message,
                     MessagesService::getDeliveryStatusIndexValue($this->message->delivery_status)
