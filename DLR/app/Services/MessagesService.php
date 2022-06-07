@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Services;
+
 use App\Models\GatewayConnection;
 use App\Models\Message;
 use Illuminate\Http\Request;
@@ -10,6 +11,7 @@ use App\Services\ApiHandlerService;
 use App\Repository\SourceDestinationRepository;
 use App\Repository\GatewayConnectionRepository;
 use DateTime;
+
 
 class MessagesService
 {
@@ -67,7 +69,8 @@ class MessagesService
             $gateway_connection->api_url,
             [
                 "ConnectionId" => "{$gateway_connection->connection_id}",
-                "MessageId" => "{$message_id}",
+                "MessageId" => $message_id,
+                // "MessageId" => "74bc1316-a302-41f9-980b-26acf72b4f58",
                 "Status" => "{$delivery_status_index}"
             ]
         );
@@ -134,19 +137,17 @@ class MessagesService
         Message $message,
         string $delivery_status_index
     ) {
-
         MessageRepository::updateFakeValue($message);
         MessageRepository::updateDeliveryStatus($message);
         $gateway_connection =
             GatewayConnectionRepository::getConnectionById(
                 $message->connection_id
             );
-        $test = MessagesService::sendDeliveryStatus(
+        MessagesService::sendDeliveryStatus(
             $message->terminator_message_id,
             $delivery_status_index,
             $gateway_connection
         );
-
     }
 
     /**
@@ -175,12 +176,11 @@ class MessagesService
         );
         MessageRepository::updateDeliveryStatus($message);
 
-         MessagesService::sendDeliveryStatus(
+        MessagesService::sendDeliveryStatus(
             $message->terminator_message_id,
             $delivery_status,
             $gateway_connection
         );
-
     }
 
     /**
