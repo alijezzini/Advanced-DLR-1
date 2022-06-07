@@ -1,7 +1,6 @@
 <?php
 
 namespace App\Services;
-
 use App\Models\GatewayConnection;
 use App\Models\Message;
 use Illuminate\Http\Request;
@@ -81,7 +80,7 @@ class MessagesService
      * @param  mixed $dlr_index
      * @return string
      */
-    public function getDeliveryStatusValue(string $dlr_index): string
+    public static function getDeliveryStatusValue(string $dlr_index): string
     {
         $delivery_status_dict = json_decode(
             file_get_contents(
@@ -169,7 +168,7 @@ class MessagesService
         string $delivery_status
     ) {
         $message = MessageRepository::getMessageById($message_id);
-        $message->delivery_status = $delivery_status;
+        $message->delivery_status = self::getDeliveryStatusValue($delivery_status);
         $gateway_connection = GatewayConnectionRepository::getConnectionById(
             $message->connection_id
         );

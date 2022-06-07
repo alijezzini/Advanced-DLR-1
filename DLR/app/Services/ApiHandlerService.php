@@ -45,9 +45,9 @@ class ApiHandlerService
     public function getApi()
     {
         $getvariables = "";
-        $numvalues = 0;
+        $numvalues = 0;   // length of values
         foreach ($this->values as $key => $value) {
-            $numvalues = $numvalues + 1;
+            $numvalues = $numvalues + 1;  
         }
         $i = 0;
         foreach ($this->values as $key => $value) {

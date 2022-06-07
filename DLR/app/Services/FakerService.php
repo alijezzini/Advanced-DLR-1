@@ -128,7 +128,6 @@ class FakerService
         $blacklist_sender = $this->checkBlacklistSender();
         if (!$blacklist_sender) {
 
-
             $send_message = MessagesService::sendMessage(
                 "Post",
                 "https://httpsmsc02.montymobile.com/HTTP/api/Client/SendSMS",
@@ -152,7 +151,6 @@ class FakerService
         $sender_destination = $this->checkSenderDestination();
 
         if (!$sender_destination) {
-
             $this->message->fake = 1;
             $this->message->delivery_status = 'Delivered';
             SourceDestinationRepository::insertSenderDestination($this->message);

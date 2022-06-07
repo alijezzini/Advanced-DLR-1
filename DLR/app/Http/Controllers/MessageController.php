@@ -167,7 +167,6 @@ class MessageController extends Controller
                     $request,
                     $gateway_connection->id
                 );
-
                 $faker = new FakerService($message);
                 $faker->fakingManager();
                 $response = [
