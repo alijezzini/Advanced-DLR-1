@@ -209,6 +209,10 @@ class MessageController extends Controller
             $message_id = $request->message_id;
             $delivery_status = $request->delivery_status;
             MessagesService::dlrHandler($message_id, $delivery_status);
+            return [
+                'status' => 200,
+                'message' =>'Ok',
+            ];
         }
     }
 

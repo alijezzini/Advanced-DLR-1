@@ -82,6 +82,7 @@ class MessagesService
      */
     public static function getDeliveryStatusValue(string $dlr_index): string
     {
+
         $delivery_status_dict = json_decode(
             file_get_contents(
                 storage_path() . "/delivery_status_dictionary.json"
@@ -94,6 +95,7 @@ class MessagesService
                 'message' => 'Delivery status does not exist in JSON file!'
             ]);
         } else {
+
             return $delivery_status_dict[$dlr_index];
         }
     }
@@ -144,8 +146,7 @@ class MessagesService
             $delivery_status_index,
             $gateway_connection
         );
-        $out = new \Symfony\Component\Console\Output\ConsoleOutput();
-        $out->writeln($test["ErrorDescription"]);
+
     }
 
     /**

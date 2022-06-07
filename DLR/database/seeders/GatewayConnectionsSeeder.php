@@ -16,16 +16,10 @@ class GatewayConnectionsSeeder extends Seeder
     public function run()
     {
         GatewayConnection::create([
-            'username' => 'primary_gateway',
-            'password' => '123456789',
-            'connection_id' => '778787',
+            'username' => 'whatmt',
+            'password' => 'Wh!t@2',
+            'connection_id' => '6357',
             'api_url' => 'https://httpsmsc.montymobile.com/HTTP/api/Vendor/DLRListener?'
-        ]);
-        GatewayConnection::create([
-            'username' => 'secondary_gateway',
-            'password' => '123456',
-            'connection_id' => '777777',
-            'api_url' => 'https://httpsmsc02.montymobile.com/HTTP/api/Vendor/DLRListener?'
         ]);
 
     }
