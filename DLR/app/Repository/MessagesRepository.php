@@ -8,7 +8,7 @@ use DateTime;
 use Illuminate\Support\Facades\DB;
 
 
-class MessageRepository
+class MessagesRepository
 {
     public static function getMessageById(string $message_id)
     {
@@ -89,11 +89,6 @@ class MessageRepository
         return $message;
     }
 
-    // 
-    // 
-    // 
-    // 
-    // Case 1
     public static function getAllMessages()
     {
         $message = DB::table('messages')
@@ -101,14 +96,12 @@ class MessageRepository
 
         return $message;
     }
-    public static function getYearMonthDay(
+
+    public static function getMessagesByYearMonthDay(
         string | null $year,
         string | null $month,
         string | null $day
-    )
-
-    // Case 2
-    {
+    ) {
         $message = DB::table('messages')
             ->whereYear('date_received', $year)
             ->whereMonth('date_received', '=', $month)
@@ -118,8 +111,7 @@ class MessageRepository
         return $message;
     }
 
-    // Case 3
-    public static function getYearMonth(
+    public static function getMessagesByYearMonth(
         string|null $year,
         string|null $month,
     ) {
@@ -131,8 +123,7 @@ class MessageRepository
         return $message;
     }
 
-    // Case 4
-    public static function getYear(
+    public static function getMessagesByYear(
         string|null $year,
     ) {
         $message = DB::table('messages')
@@ -141,8 +132,8 @@ class MessageRepository
 
         return $message;
     }
-    // total of senders
-    public static function getSender(
+
+    public static function getMessagesBySenderId(
         string|null $sender,
     ) {
         $message = DB::table('messages')

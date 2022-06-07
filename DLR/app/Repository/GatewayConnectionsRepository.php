@@ -5,7 +5,7 @@ namespace App\Repository;
 use App\Models\GatewayConnection;
 use Illuminate\Support\Facades\DB;
 
-class GatewayConnectionRepository
+class GatewayConnectionsRepository
 {
     public static function getConnection(
         string $username,

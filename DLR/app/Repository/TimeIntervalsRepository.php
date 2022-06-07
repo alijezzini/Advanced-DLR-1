@@ -5,7 +5,7 @@ namespace App\Repository;
 use App\Models\TimeInterval;
 use Illuminate\Support\Facades\DB;
 
-class TimeIntervalRepository
+class TimeIntervalsRepository
 {
     public static function getTimeInterval()
     {

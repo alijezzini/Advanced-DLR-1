@@ -2,15 +2,15 @@
 
 namespace App\Services;
 
-use App\Repository\GatewayConnectionRepository;
+use App\Repository\GatewayConnectionsRepository;
 
-class GatewayConnectionService
+class GatewayConnectionsService
 {
     public static function checkGatewayConnection(
         string $username,
         string $password
     ) {
-        $gateway_connection = GatewayConnectionRepository::getConnection(
+        $gateway_connection = GatewayConnectionsRepository::getConnection(
             $username,
             $password
         );
@@ -23,7 +23,7 @@ class GatewayConnectionService
 
     public static function getConnectionId(string $username, string $password)
     {
-        $gateway_connection = GatewayConnectionRepository::getConnection(
+        $gateway_connection = GatewayConnectionsRepository::getConnection(
             $username,
             $password
         );

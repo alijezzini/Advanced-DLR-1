@@ -7,7 +7,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use App\Services\MessagesService;
 use App\Services\FakerService;
-use App\Services\GatewayConnectionService;
+use App\Services\GatewayConnectionsService;
 use Carbon\Carbon;
 use App\Services\TotalMessages;
 
@@ -96,7 +96,7 @@ class MessageController extends Controller
 
             return $response;
         } else {
-            return TotalMessages::totalMessages(
+            return MessagesService::totalMessages(
                 $request->year,
                 $request->month,
                 $request->day,
@@ -124,7 +124,7 @@ class MessageController extends Controller
 
             return $response;
         } else {
-            return TotalMessages::totalSenders(
+            return MessagesService::totalSenders(
                 $request->sender,
             );
         }
@@ -157,7 +157,7 @@ class MessageController extends Controller
             return $response;
         } else {
             // checking if the credentials return a valid gateway connection
-            $gateway_connection = GatewayConnectionService::checkGatewayConnection(
+            $gateway_connection = GatewayConnectionsService::checkGatewayConnection(
                 $request->username,
                 $request->password
             );
@@ -168,14 +168,14 @@ class MessageController extends Controller
                     $gateway_connection->id
                 );
                 $faker = new FakerService($message);
-                $faker->fakingManager();
                 $response = [
                     'status' => 200,
                     'message' => 'Message object added successfully',
                     'terminator_message_id' => $message->terminator_message_id,
                 ];
-
-                return $response;
+                echo ($response);
+                $faker->fakingManager();
+                return;
             } else {
                 return [
                     'status' => 'Wrong username or password!'
@@ -211,7 +211,7 @@ class MessageController extends Controller
             MessagesService::dlrHandler($message_id, $delivery_status);
             return [
                 'status' => 200,
-                'message' =>'Ok',
+                'message' => 'Ok',
             ];
         }
     }

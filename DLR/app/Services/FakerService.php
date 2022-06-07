@@ -4,11 +4,11 @@ namespace App\Services;
 
 use App\Models\Message;
 use Carbon\Carbon;
-use App\Repository\MessageRepository;
-use App\Repository\BlacklistSourceRepository;
-use App\Repository\GatewayConnectionRepository;
-use App\Repository\SourceDestinationRepository;
-use App\Repository\TimeIntervalRepository;
+use App\Repository\MessagesRepository;
+use App\Repository\BlacklistSourcesRepository;
+use App\Repository\GatewayConnectionsRepository;
+use App\Repository\SourceDestinationsRepository;
+use App\Repository\TimeIntervalsRepository;
 
 class FakerService
 {
@@ -31,7 +31,7 @@ class FakerService
     public function checkBlacklistSender(): bool
     {
 
-        $source_sender_id = BlacklistSourceRepository::getSourceBySenderId(
+        $source_sender_id = BlacklistSourcesRepository::getSourceBySenderId(
             $this->message->sender_id
         );
 
@@ -53,7 +53,7 @@ class FakerService
     {
 
         $sender_id_destination =
-            SourceDestinationRepository::getSenderDestination(
+            SourceDestinationsRepository::getSenderDestination(
                 $this->message->sender_id,
                 $this->message->destination
             );
@@ -74,7 +74,7 @@ class FakerService
      */
     public function getTimeDifference()
     {
-        $old_destination = SourceDestinationRepository::getSenderDestination(
+        $old_destination = SourceDestinationsRepository::getSenderDestination(
             $this->message->sender_id,
             $this->message->destination
         )[0];
@@ -98,7 +98,7 @@ class FakerService
     public function checkFakingInterval(): bool
     {
         $time_difference = $this->getTimeDifference();
-        $time_interval = TimeIntervalRepository::getTimeInterval();
+        $time_interval = TimeIntervalsRepository::getTimeInterval();
 
         if ($time_difference > $time_interval) {
             return true;
@@ -139,7 +139,7 @@ class FakerService
                 ]
             );
             $this->message->message_id = $send_message['SMS'][0]['Id'];
-            MessageRepository::updateMessageId($this->message);
+            MessagesRepository::updateMessageId($this->message);
             return;
         }
         /**
@@ -153,7 +153,7 @@ class FakerService
         if (!$sender_destination) {
             $this->message->fake = 1;
             $this->message->delivery_status = 'Delivered';
-            SourceDestinationRepository::insertSenderDestination($this->message);
+            SourceDestinationsRepository::insertSenderDestination($this->message);
             MessagesService::messageManager(
                 $this->message,
                 MessagesService::getDeliveryStatusIndexValue($this->message->delivery_status)
@@ -164,7 +164,7 @@ class FakerService
             if ($faking_interval) {
                 $this->message->fake = 1;
                 $this->message->delivery_status = 'Delivered';
-                SourceDestinationRepository::updateSenderDestination($this->message);
+                SourceDestinationsRepository::updateSenderDestination($this->message);
                 MessagesService::messageManager(
                     $this->message,
                     MessagesService::getDeliveryStatusIndexValue($this->message->delivery_status)
@@ -181,7 +181,7 @@ class FakerService
                     ]
                 );
             }
-            SourceDestinationRepository::updateSenderDestination($this->message);
+            SourceDestinationsRepository::updateSenderDestination($this->message);
         }
     }
 }

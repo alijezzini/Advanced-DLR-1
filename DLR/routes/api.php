@@ -7,7 +7,7 @@ use App\Http\Controllers\MessageController;
 use App\Http\Controllers\SourceDestinationController;
 use App\Http\Controllers\DlrController;
 use App\Http\Controllers\GatewayConnectionController;
-use App\services\GatewayConnectionService;
+use App\services\GatewayConnectionsService;
 use App\Services\Bla;
 
 
@@ -66,7 +66,7 @@ Route::group([
         $username,
         $password
     ) {
-        return GatewayConnectionService::getConnectionId($username, $password);
+        return GatewayConnectionsService::getConnectionId($username, $password);
     });
 
 

@@ -6,10 +6,10 @@ use App\Models\GatewayConnection;
 use App\Models\Message;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
-use App\Repository\MessageRepository;
+use App\Repository\MessagesRepository;
 use App\Services\ApiHandlerService;
 use App\Repository\SourceDestinationRepository;
-use App\Repository\GatewayConnectionRepository;
+use App\Repository\GatewayConnectionsRepository;
 use DateTime;
 
 
@@ -41,7 +41,7 @@ class MessagesService
      */
     public function getDeliveryStatusIndexValueDB(Request $request)
     {
-        $message = MessageRepository::getMessageById($request->message_id);
+        $message = MessagesRepository::getMessageById($request->message_id);
         if (!$message) {
             return [
                 'status' => 'Message Id was not found!'
@@ -137,10 +137,10 @@ class MessagesService
         Message $message,
         string $delivery_status_index
     ) {
-        MessageRepository::updateFakeValue($message);
-        MessageRepository::updateDeliveryStatus($message);
+        MessagesRepository::updateFakeValue($message);
+        MessagesRepository::updateDeliveryStatus($message);
         $gateway_connection =
-            GatewayConnectionRepository::getConnectionById(
+            GatewayConnectionsRepository::getConnectionById(
                 $message->connection_id
             );
         MessagesService::sendDeliveryStatus(
@@ -169,12 +169,12 @@ class MessagesService
         string $message_id,
         string $delivery_status
     ) {
-        $message = MessageRepository::getMessageById($message_id);
+        $message = MessagesRepository::getMessageById($message_id);
         $message->delivery_status = self::getDeliveryStatusValue($delivery_status);
-        $gateway_connection = GatewayConnectionRepository::getConnectionById(
+        $gateway_connection = GatewayConnectionsRepository::getConnectionById(
             $message->connection_id
         );
-        MessageRepository::updateDeliveryStatus($message);
+        MessagesRepository::updateDeliveryStatus($message);
 
         MessagesService::sendDeliveryStatus(
             $message->terminator_message_id,
@@ -215,7 +215,7 @@ class MessagesService
     ) {
         $message = (new Message)->newQuery();
         if (!is_null($sender_id) and !is_null($destination)) {
-            $message = MessageRepository::getMessagesBYSourceDestination(
+            $message = MessagesRepository::getMessagesBYSourceDestination(
                 $sender_id,
                 $destination,
                 $start_date,
@@ -224,13 +224,13 @@ class MessagesService
         } else {
             if (is_null($sender_id)) {
 
-                $message = MessageRepository::getMessagesByDestination(
+                $message = MessagesRepository::getMessagesByDestination(
                     $destination,
                     $start_date,
                     $end_date
                 );
             } else {
-                $message = MessageRepository::GetMessagesBySource(
+                $message = MessagesRepository::GetMessagesBySource(
                     $sender_id,
                     $start_date,
                     $end_date
@@ -247,21 +247,16 @@ class MessagesService
         }
     }
 
-    // 
-    // 
-    // 
-    // 
-    public static function fakeMessages($messages)
+    public static function totalFakeMessages($messages)
     {
-        $aux = array();
+        $fake_messages = array();
         foreach ($messages as $message) {
             if ($message->fake == 1) {
-                array_push($aux, $message);
+                array_push($fake_messages, $message);
             }
         }
-        return $aux;
+        return $fake_messages;
     }
-
 
     public static function totalMessages(
         string | null $year,
@@ -269,21 +264,21 @@ class MessagesService
         string | null $day,
     ) {
         if (is_null($year) and is_null($month) and is_null($day)) {
-            $messages = TotalMessageRepository::getAllMessages();
+            $messages = MessagesRepository::getAllMessages();
         }
         if (!is_null($year) and !is_null($month) and !is_null($day)) {
-            $messages = TotalMessageRepository::getYearMonthDay($year, $month, $day);
+            $messages = MessagesRepository::getMessagesByYearMonthDay($year, $month, $day);
         } else {
             if (!is_null($year) and !is_null($month)) {
-                $messages = TotalMessageRepository::getYearMonth($year, $month);
+                $messages = MessagesRepository::getMessagesByYearMonth($year, $month);
             } else {
                 if (!is_null($year) and is_null($day)) {
-                    $messages = TotalMessageRepository::getYear($year);
+                    $messages = MessagesRepository::getMessagesByYear($year);
                 }
             }
         }
         $total_messages_number = $messages->count();
-        $totalfake = count(self::fakeMessages($messages));
+        $totalfake = count(self::totalFakeMessages($messages));
         return  [
             'status' => 404,
             'Number of total messages' => $total_messages_number,
@@ -294,14 +289,14 @@ class MessagesService
     public static function totalSenders(
         string | null $sender,
     ) {
-        $Senders = TotalMessageRepository::getSender($sender);
+        $senders = MessagesRepository::getMessagesBySenderId($sender);
 
-        $total_senders_number = $Senders->count();
-        $totalfake = count(self::fakeMessages($Senders));
+        $total_senders_count = $senders->count();
+        $total_fake_messages = count(self::totalFakeMessages($senders));
         return  [
             'status' => 404,
-            'Number of total senders' => $total_senders_number,
-            'Number of fake senders' => $totalfake,
+            'Number of total senders' => $total_senders_count,
+            'Number of fake senders' => $total_fake_messages,
         ];
     }
 }

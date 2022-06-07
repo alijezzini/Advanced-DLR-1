@@ -5,7 +5,7 @@ namespace App\Repository;
 use App\Models\Message;
 use Illuminate\Support\Facades\DB;
 
-class SourceDestinationRepository
+class SourceDestinationsRepository
 {
     public static function getSenderDestination(string $sender_id, string $destination)
     {
