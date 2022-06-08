@@ -9,6 +9,7 @@ use App\Repository\BlacklistSourcesRepository;
 use App\Repository\GatewayConnectionsRepository;
 use App\Repository\SourceDestinationsRepository;
 use App\Repository\TimeIntervalsRepository;
+use Illuminate\Support\Facades\Log;
 
 class FakerService
 {
@@ -114,16 +115,12 @@ class FakerService
      */
     public function fakingManager()
     {
-
-
-
         /**
          * Checking if the sender_id is found in the blacklist table.
          * If not, the message will be sent again to Monty Mobile
          * through an API. The API responce will contain a new
          * message_id that we will update our Message object with
          */
-
 
         $blacklist_sender = $this->checkBlacklistSender();
         if (!$blacklist_sender) {
@@ -140,6 +137,7 @@ class FakerService
             );
             $this->message->message_id = $send_message['SMS'][0]['Id'];
             MessagesRepository::updateMessageId($this->message);
+            Log::info("Logging one variable: " . $send_message);
             return;
         }
         /**

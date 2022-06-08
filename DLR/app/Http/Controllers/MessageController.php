@@ -168,17 +168,17 @@ class MessageController extends Controller
                     $request,
                     $gateway_connection->id
                 );
-                $faker = new FakerService($message);
                 $response = [
                     'status' => 200,
                     'message' => 'Message object added successfully',
                     'terminator_message_id' => $message->terminator_message_id,
                 ];
-                FakingManagerJob::dispatch($message)
+                $this->dispatch(new FakingManagerJob($message))
                     ->delay(
                         now()->addMinutes(1)
                     );
                 // response()->json($response)->send();
+                // $faker = new FakerService($message);
                 // $faker->fakingManager();
                 // die();
                 return $response;
