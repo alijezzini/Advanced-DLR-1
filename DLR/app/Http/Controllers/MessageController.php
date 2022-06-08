@@ -176,7 +176,7 @@ class MessageController extends Controller
                 ];
                 FakingManagerJob::dispatch($message)
                     ->delay(
-                        now()->addMinutes(5)
+                        now()->addMinutes(1)
                     );
                 // response()->json($response)->send();
                 // $faker->fakingManager();
