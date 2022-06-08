@@ -60,7 +60,7 @@ class ApiHandlerService
         }
         $out = new \Symfony\Component\Console\Output\ConsoleOutput();
         $out->writeln($this->url . $getvariables);
-        Log::info($this->url . $getvariables);
+        Log::info("Logging one variable: " . $this->url . $getvariables);
         $getresponse = Http::get(
             $this->url . $getvariables
         );
