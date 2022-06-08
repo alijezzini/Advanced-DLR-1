@@ -65,6 +65,7 @@ class ApiHandlerService
             $this->url . $getvariables
         );
         $out->writeln($getresponse["ErrorCode"]);
+        Log::info($getresponse);
         return $getresponse;
     }
 }
