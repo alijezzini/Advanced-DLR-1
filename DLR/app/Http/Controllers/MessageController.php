@@ -177,11 +177,12 @@ class MessageController extends Controller
                 //     ->delay(
                 //         now()->addMinutes(1)
                 //     );
-                // response()->json($response)->send();
+                response()->json($response)->send();
                 $faker = new FakerService($message);
                 $faker->fakingManager();
-                // die();
-                return $response;
+                die();
+                // return $response;
+                return;
             } else {
                 return [
                     'status' => 'Wrong username or password!'
