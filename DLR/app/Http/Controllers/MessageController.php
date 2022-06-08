@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Http\Controllers;
+use Illuminate\Support\Facades\Log;
 
 use App\Jobs\FakingManagerJob;
 use App\Models\Message;
@@ -213,6 +214,7 @@ class MessageController extends Controller
 
             return $response;
         } else {
+            Log::info("testttttt: " . $request->message_id);
             $message_id = $request->message_id;
             $delivery_status = $request->delivery_status;
             MessagesService::dlrHandler($message_id, $delivery_status);
