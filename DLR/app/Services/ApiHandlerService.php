@@ -4,6 +4,7 @@ namespace App\Services;
 
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Log;
 
 
 class ApiHandlerService
@@ -47,7 +48,7 @@ class ApiHandlerService
         $getvariables = "";
         $numvalues = 0;   // length of values
         foreach ($this->values as $key => $value) {
-            $numvalues = $numvalues + 1;  
+            $numvalues = $numvalues + 1;
         }
         $i = 0;
         foreach ($this->values as $key => $value) {
@@ -58,9 +59,10 @@ class ApiHandlerService
             }
         }
         $out = new \Symfony\Component\Console\Output\ConsoleOutput();
-        $out->writeln($this->url.$getvariables);
+        $out->writeln($this->url . $getvariables);
+        Log::info($this->url . $getvariables);
         $getresponse = Http::get(
-            $this->url.$getvariables
+            $this->url . $getvariables
         );
         $out->writeln($getresponse["ErrorCode"]);
         return $getresponse;
