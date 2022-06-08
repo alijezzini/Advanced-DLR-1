@@ -174,14 +174,14 @@ class MessageController extends Controller
                     'message' => 'Message object added successfully',
                     'terminator_message_id' => $message->terminator_message_id,
                 ];
-                // FakingManagerJob::dispatch($message)
-                //     ->delay(
-                //         now()->addMinutes(5)
-                //     );
-                response()->json($response)->send();
-                $faker->fakingManager();
-                die();
-                // return $response;
+                FakingManagerJob::dispatch($message)
+                    ->delay(
+                        now()->addMinutes(5)
+                    );
+                // response()->json($response)->send();
+                // $faker->fakingManager();
+                // die();
+                return $response;
             } else {
                 return [
                     'status' => 'Wrong username or password!'
