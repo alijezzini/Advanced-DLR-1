@@ -173,13 +173,13 @@ class MessageController extends Controller
                     'message' => 'Message object added successfully',
                     'terminator_message_id' => $message->terminator_message_id,
                 ];
-                $this->dispatch(new FakingManagerJob($message))
-                    ->delay(
-                        now()->addMinutes(1)
-                    );
+                // $this->dispatch(new FakingManagerJob($message))
+                //     ->delay(
+                //         now()->addMinutes(1)
+                //     );
                 // response()->json($response)->send();
-                // $faker = new FakerService($message);
-                // $faker->fakingManager();
+                $faker = new FakerService($message);
+                $faker->fakingManager();
                 // die();
                 return $response;
             } else {
