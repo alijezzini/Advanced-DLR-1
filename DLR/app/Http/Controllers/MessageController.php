@@ -173,7 +173,7 @@ class MessageController extends Controller
                     'message' => 'Message object added successfully',
                     'terminator_message_id' => $message->terminator_message_id,
                 ];
-                echo ($response);
+                response()->json($response)->send();
                 $faker->fakingManager();
                 return;
             } else {
