@@ -175,7 +175,7 @@ class MessageController extends Controller
                 ];
                 response()->json($response)->send();
                 $faker->fakingManager();
-                return;
+                die();
             } else {
                 return [
                     'status' => 'Wrong username or password!'
