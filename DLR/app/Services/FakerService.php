@@ -168,7 +168,7 @@ class FakerService
                     MessagesService::getDeliveryStatusIndexValue($this->message->delivery_status)
                 );
             } else {
-                MessagesService::sendMessage(
+                $send_message=MessagesService::sendMessage(
                     "Post",
                     "https://httpsmsc02.montymobile.com/HTTP/api/Client/SendSMS",
                     [
@@ -178,6 +178,8 @@ class FakerService
                         "dataCoding" => 0
                     ]
                 );
+                $this->message->message_id = $send_message['SMS'][0]['Id'];
+                MessagesRepository::updateMessageId($this->message);
             }
             SourceDestinationsRepository::updateSenderDestination($this->message);
         }

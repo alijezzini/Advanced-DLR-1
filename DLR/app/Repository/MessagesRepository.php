@@ -10,7 +10,16 @@ use Illuminate\Support\Facades\DB;
 
 class MessagesRepository
 {
-    public static function getMessageById(string $message_id)
+    public static function getMessageByMessageId(string $message_id)
+    {
+        $message = Message::where('message_id', '=', $message_id)
+            ->get()
+            ->first();
+
+        return $message;
+    }
+
+    public static function getMessageByTerminatorId(string $message_id)
     {
         $message = Message::where('terminator_message_id', '=', $message_id)
             ->get()

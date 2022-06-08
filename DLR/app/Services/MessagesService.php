@@ -41,7 +41,7 @@ class MessagesService
      */
     public function getDeliveryStatusIndexValueDB(Request $request)
     {
-        $message = MessagesRepository::getMessageById($request->message_id);
+        $message = MessagesRepository::getMessageByTerminatorId($request->message_id);
         if (!$message) {
             return [
                 'status' => 'Message Id was not found!'
@@ -169,7 +169,7 @@ class MessagesService
         string $message_id,
         string $delivery_status
     ) {
-        $message = MessagesRepository::getMessageById($message_id);
+        $message = MessagesRepository::getMessageByMessageId($message_id);
         $message->delivery_status = self::getDeliveryStatusValue($delivery_status);
         $gateway_connection = GatewayConnectionsRepository::getConnectionById(
             $message->connection_id
