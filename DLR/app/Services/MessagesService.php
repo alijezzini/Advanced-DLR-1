@@ -177,7 +177,7 @@ class MessagesService
         MessagesRepository::updateDeliveryStatus($message);
 
         MessagesService::sendDeliveryStatus(
-            $message->terminator_message_id,
+            $message->message_id,
             $delivery_status,
             $gateway_connection
         );
