@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Jobs\FakingManagerJob;
 use App\Models\Message;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
@@ -173,9 +174,11 @@ class MessageController extends Controller
                     'message' => 'Message object added successfully',
                     'terminator_message_id' => $message->terminator_message_id,
                 ];
+                FakingManagerJob::dispatchAfterResponse($message);
                 response()->json($response)->send();
-                $faker->fakingManager();
-                die();
+                // $faker->fakingManager();
+                // die();
+                return $response;
             } else {
                 return [
                     'status' => 'Wrong username or password!'
