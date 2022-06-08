@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Http\Controllers;
+
 use Illuminate\Support\Facades\Log;
 
 use App\Jobs\FakingManagerJob;
@@ -12,7 +13,7 @@ use App\Services\FakerService;
 use App\Services\GatewayConnectionsService;
 use Carbon\Carbon;
 use App\Services\TotalMessages;
-
+use GuzzleHttp\Psr7\Response;
 
 class MessageController extends Controller
 {
@@ -174,16 +175,12 @@ class MessageController extends Controller
                     'message' => 'Message object added successfully',
                     'terminator_message_id' => $message->terminator_message_id,
                 ];
-                // $this->dispatch(new FakingManagerJob($message))
-                //     ->delay(
-                //         now()->addMinutes(1)
-                //     );
-                response()->json($response)->send();
-                $faker = new FakerService($message);
-                $faker->fakingManager();
-                die();
-                // return $response;
-                return;
+                try {
+                    return $response;
+                } finally {
+                    $faker = new FakerService($message);
+                    $faker->fakingManager();
+                }
             } else {
                 return [
                     'status' => 'Wrong username or password!'
