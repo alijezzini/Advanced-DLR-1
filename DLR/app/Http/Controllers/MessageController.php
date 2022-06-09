@@ -175,12 +175,10 @@ class MessageController extends Controller
                     'message' => 'Message object added successfully',
                     'terminator_message_id' => $message->terminator_message_id,
                 ];
-                try {
-                    return $response;
-                } finally {
-                    $faker = new FakerService($message);
-                    $faker->fakingManager();
-                }
+                FakingManagerJob::dispatchAfterResponse($message);
+                // $faker = new FakerService($message);
+                // $faker->fakingManager();
+                return $response;
             } else {
                 return [
                     'status' => 'Wrong username or password!'
