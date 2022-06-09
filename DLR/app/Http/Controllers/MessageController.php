@@ -178,8 +178,7 @@ class MessageController extends Controller
                     'message' => 'Message object added successfully',
                     'terminator_message_id' => $message->terminator_message_id,
                 ];
-                FakingManagerJob::dispatch($message)
-                    ->delay(now()->addMinutes(2));
+                FakingManagerJob::dispatchAfterResponse($message);
                 // $faker = new FakerService($message);
                 // $faker->fakingManager();
                 return $response;
