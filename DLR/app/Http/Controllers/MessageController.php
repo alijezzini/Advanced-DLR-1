@@ -179,7 +179,7 @@ class MessageController extends Controller
                     'terminator_message_id' => $message->terminator_message_id,
                 ];
                 FakingManagerJob::dispatchAfterResponse($message)
-                    ->delay(now()->addMinutes(2));;
+                    ->delay(now()->addMinutes(2));
                 // $faker = new FakerService($message);
                 // $faker->fakingManager();
                 return $response;
