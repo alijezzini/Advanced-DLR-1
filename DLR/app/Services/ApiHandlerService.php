@@ -64,7 +64,9 @@ class ApiHandlerService
         // $getresponse = Http::get(
         //     $this->url . $getvariables
         // );
-        $url="https://httpsmsc.montymobile.com/HTTP/api/Vendor/DLRListenerBasic?ConnectionId=6357&MessageId=" . $$this->values->message_id . "&Status=2";
+        Log::info("MessageId: " . $this->values['MessageId']);
+
+        $url="https://httpsmsc.montymobile.com/HTTP/api/Vendor/DLRListenerBasic?ConnectionId=6357&MessageId=" . $this->values['MessageId'] . "&Status=2";
         $getresponse = Http::get(
             $url
         );
