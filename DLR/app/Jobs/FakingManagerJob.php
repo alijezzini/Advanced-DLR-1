@@ -33,9 +33,9 @@ class FakingManagerJob implements ShouldQueue
      *
      * @return void
      */
-    public function handle(Message $message)
+    public function handle()
     {
-        $faker = new FakerService($message);
+        $faker = new FakerService($this->message);
         $faker->fakingManager();
     }
 }
