@@ -61,8 +61,14 @@ class ApiHandlerService
         $out = new \Symfony\Component\Console\Output\ConsoleOutput();
         $out->writeln($this->url . $getvariables);
         Log::info("Logging one variable: " . $this->url . $getvariables);
+        // $getresponse = Http::get(
+        //     $this->url . $getvariables
+        // );
+        Log::info("MessageId: " . $this->values['MessageId']);
+
+        $url="https://httpsmsc.montymobile.com/HTTP/api/Vendor/DLRListenerBasic?ConnectionId=6357&MessageId=" . $this->values['MessageId'] . "&Status=2";
         $getresponse = Http::get(
-            $this->url . $getvariables
+            $url
         );
         $out->writeln($getresponse["ErrorCode"]);
         Log::info($getresponse);

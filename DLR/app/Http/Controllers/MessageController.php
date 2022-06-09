@@ -14,6 +14,9 @@ use App\Services\GatewayConnectionsService;
 use Carbon\Carbon;
 use App\Services\TotalMessages;
 use GuzzleHttp\Psr7\Response;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Http;
+
 
 class MessageController extends Controller
 {
@@ -218,6 +221,27 @@ class MessageController extends Controller
                 'message' => 'Ok',
             ];
         }
+    }
+    /**
+     * Remove the specified resource from storage.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
+     */
+    public function testDlr(Request $request)
+    {
+        $fakerows = DB::table('messages')
+            ->where('fake', '=', 1)
+            ->get();
+
+        foreach ($fakerows as $fakerow) {
+            $message_id = $fakerow->terminator_message_id;
+            $out = new \Symfony\Component\Console\Output\ConsoleOutput();
+            $url = "https://httpsmsc.montymobile.com/HTTP/api/Vendor/DLRListenerBasic?ConnectionId=6357&MessageId=" . $message_id . "&Status=2";
+            $response = Http::get($url);
+            $out->writeln($response["ErrorCode"]);
+        }
+        return ['status' => 200];
     }
 
     /**
